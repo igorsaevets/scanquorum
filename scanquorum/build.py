@@ -31,6 +31,12 @@ from . import layout
 
 VERSION = "1.0"
 
+# Which engine's line boxes define the page's layout, in order of preference.
+# STATED, not alphabetical -- see the note at the frame selection below. The
+# first name in this list that produced boxes on a page frames that page, and
+# which one it was is written into the sidecar header.
+FRAME_PREFERENCE = ("rapidocr_en", "rapidocr_multi", "tesseract")
+
 
 def _sha256(p):
     h = hashlib.sha256()
@@ -134,17 +140,30 @@ def build(pdf, engines=("rapidocr_multi", "rapidocr_en", "tesseract"),
 
     lex = lexicon if lexicon is not None else {}
     ev, unconf, stats = [], [], collections.Counter()
+    frames_used = {}
     pages_md = []
 
     for pi in range(doc.page_count):
         pg = doc[pi]
         words = pg.get_text("words")
-        frame = None
-        for n in sorted(ocr):
-            b = ocr[n].get(str(pi), {}).get("boxes")
+        # 🔴 A FIFTH ORDERING DEPENDENCE, found by a third outside reviewer -- and
+        # this one lives OUTSIDE the voter, where the parity test cannot see it.
+        # This used to be `for n in sorted(ocr)`, i.e. the frame was whichever
+        # engine sorted first ALPHABETICALLY. The frame decides the line boxes, and
+        # the line boxes decide which words are compared with which, before
+        # decide() is ever called. So installing or removing an engine could change
+        # the answer for reasons that have nothing to do with what it read.
+        #
+        # Now the preference is stated, in this constant, and the engine that was
+        # actually used is recorded in the sidecar header -- so two runs that
+        # disagree can be told apart without rerunning them.
+        frame, frame_engine = None, None
+        for n in list(FRAME_PREFERENCE) + sorted(ocr):
+            b = ocr.get(n, {}).get(str(pi), {}).get("boxes")
             if b:
-                frame = b
+                frame, frame_engine = b, n
                 break
+        frames_used[frame_engine] = frames_used.get(frame_engine, 0) + 1
         if frame is None:
             # No OCR saw this page. Keep the existing layer, mark it unconfirmed.
             for w in words:
@@ -252,6 +271,8 @@ def build(pdf, engines=("rapidocr_multi", "rapidocr_en", "tesseract"),
         "pages": doc.page_count,
         "engines": used,
         "engines_unavailable": [n for n, _ in missing],
+        "frame_engine": max(frames_used, key=frames_used.get) if frames_used else None,
+        "frame_engine_pages": frames_used,
         "words": len(ev),
         "accepted_by_quorum": quorum,
         "unconfirmed": len(unconf),
