@@ -1,0 +1,79 @@
+# The claim "all tests green" was, until now, only ever made in a chat log.
+#
+# Three of the four suites need no OCR engine, no network and no key: they replay
+# recorded data. Those run on every push, on three operating systems, and they are
+# the ones that protect the published numbers.
+#
+# The doctor suite is different on purpose. It is allowed to run WITHOUT Tesseract
+# installed, because the behaviour worth testing is what the tool does when a voter
+# is missing -- it must report a degraded quorum and exit 1, not pretend. A CI job
+# that installed every engine would never exercise that path, which is the path a
+# new user is most likely to hit.
+name: tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  replay:
+    name: replay suites (no engines needed)
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ["3.9", "3.12", "3.14"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      # These three read fixtures and nothing else. If they need a package, that is
+      # itself a defect: a stranger must be able to check the published numbers
+      # without installing an OCR stack.
+      - name: parity of the published code with the measured code
+        run: python tests/test_vote_parity.py
+      - name: the vision model can only choose, never transcribe
+        run: python tests/test_safety.py
+      - name: the accuracy figures recompute from the shipped gold set
+        run: python tests/test_goldset.py
+
+  doctor:
+    name: doctor reports a degraded quorum honestly
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r requirements.txt
+
+      # Deliberately no Tesseract. The assertion is that the tool NOTICES.
+      - name: doctor must exit 1 with only correlated voters available
+        run: |
+          set +e
+          python -m scanquorum doctor --json > doctor.json
+          code=$?
+          set -e
+          cat doctor.json
+          if [ "$code" -ne 1 ]; then
+            echo "::error::doctor exited $code; expected 1 (runs, but quorum degraded)."
+            echo "Tesseract is not installed in this job, so there is exactly one"
+            echo "independent OCR opinion. Exit 0 here would mean the tool cannot tell."
+            exit 1
+          fi
+          python - <<'PY'
+          import json
+          d = json.load(open("doctor.json"))
+          assert d["independent_opinions"] < 2, d["independent_opinions"]
+          bad = [c for c in d["checks"] if not c["ok"] and not c.get("fix")]
+          assert not bad, "a failing check with no remedy: %r" % bad
+          print("doctor reported %d independent opinion(s) and a fix for every failure"
+                % d["independent_opinions"])
+          PY
+
+      - name: the doctor's own test suite
+        run: python tests/test_doctor.py

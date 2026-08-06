@@ -1,0 +1,1082 @@
+[
+ {
+  "n": 1,
+  "idx": 9250,
+  "page": 12,
+  "bbox": [
+   429.7,
+   123.7,
+   451.1,
+   134.5
+  ],
+  "rule": "SEP",
+  "multi": "3—558;4—528;8—226;9—670",
+  "en": "9670",
+  "chosen": "9-670",
+  "who": "tesseract",
+  "truth": "9—670",
+  "pdf_layer": "9----070"
+ },
+ {
+  "n": 2,
+  "idx": 10136,
+  "page": 13,
+  "bbox": [
+   462.6,
+   343.6,
+   489.6,
+   354.3
+  ],
+  "rule": "VOTE3/4",
+  "multi": "personal",
+  "en": "personal",
+  "chosen": "personal",
+  "who": "pdf_layer,en,multi",
+  "truth": "personal",
+  "pdf_layer": "personal"
+ },
+ {
+  "n": 3,
+  "idx": 13213,
+  "page": 18,
+  "bbox": [
+   217.5,
+   506.2,
+   240.0,
+   517.5
+  ],
+  "rule": "SEP=",
+  "multi": "3--632",
+  "en": "3--632",
+  "chosen": "3-632",
+  "who": "pdf_layer,en,multi,tesseract",
+  "truth": "3—632",
+  "pdf_layer": "3-632"
+ },
+ {
+  "n": 4,
+  "idx": 19702,
+  "page": 27,
+  "bbox": [
+   196.8,
+   498.1,
+   198.8,
+   505.5
+  ],
+  "rule": "VOTE2/3",
+  "multi": "as",
+  "en": "as",
+  "chosen": "as",
+  "who": "en,multi",
+  "truth": "BAD_BOX",
+  "pdf_layer": "~"
+ },
+ {
+  "n": 5,
+  "idx": 3398,
+  "page": 4,
+  "bbox": [
+   346.3,
+   509.8,
+   391.4,
+   520.5
+  ],
+  "rule": "VOTE2/4",
+  "multi": "\"investment”.",
+  "en": "\"investment\".",
+  "chosen": "\"investment\".",
+  "who": "pdf_layer,en",
+  "truth": "\"investment\".",
+  "pdf_layer": "\"investment\"."
+ },
+ {
+  "n": 6,
+  "idx": 12106,
+  "page": 16,
+  "bbox": [
+   25.0,
+   668.3,
+   28.5,
+   682.3
+  ],
+  "rule": "DISPUTED",
+  "multi": null,
+  "en": "^",
+  "chosen": ".,",
+  "who": "",
+  "truth": "BAD_BOX",
+  "pdf_layer": ".,"
+ },
+ {
+  "n": 7,
+  "idx": 18222,
+  "page": 25,
+  "bbox": [
+   245.6,
+   438.1,
+   269.8,
+   448.7
+  ],
+  "rule": "SEP=",
+  "multi": "10—87,",
+  "en": "10-87,",
+  "chosen": "10-87,",
+  "who": "pdf_layer,en,multi,tesseract",
+  "truth": "10—87,",
+  "pdf_layer": "10-87,"
+ },
+ {
+  "n": 8,
+  "idx": 10672,
+  "page": 14,
+  "bbox": [
+   421.7,
+   350.9,
+   429.6,
+   361.3
+  ],
+  "rule": "VOTE3/4",
+  "multi": "et.",
+  "en": "ct.",
+  "chosen": "et.",
+  "who": "pdf_layer,multi,tesseract",
+  "truth": "ct.",
+  "pdf_layer": "et."
+ },
+ {
+  "n": 9,
+  "idx": 25188,
+  "page": 34,
+  "bbox": [
+   366.3,
+   432.4,
+   392.5,
+   443.4
+  ],
+  "rule": "SEP",
+  "multi": "14-340",
+  "en": "14340",
+  "chosen": "14-340",
+  "who": "pdf_layer,multi,tesseract",
+  "truth": "14—340",
+  "pdf_layer": "14-340"
+ },
+ {
+  "n": 10,
+  "idx": 3903,
+  "page": 5,
+  "bbox": [
+   413.4,
+   338.1,
+   442.0,
+   348.9
+  ],
+  "rule": "VOTE2/4",
+  "multi": "Indians”,",
+  "en": "Indians\",",
+  "chosen": "Indians”,",
+  "who": "multi,tesseract",
+  "truth": "Indians\",",
+  "pdf_layer": "Inruans\","
+ },
+ {
+  "n": 11,
+  "idx": 18015,
+  "page": 25,
+  "bbox": [
+   193.1,
+   95.0,
+   226.9,
+   105.7
+  ],
+  "rule": "LEX",
+  "multi": "marijuana,",
+  "en": null,
+  "chosen": "marijuana,",
+  "who": "multi",
+  "truth": "marijuana,",
+  "pdf_layer": "muijuana,"
+ },
+ {
+  "n": 12,
+  "idx": 8114,
+  "page": 11,
+  "bbox": [
+   455.1,
+   171.5,
+   474.9,
+   182.0
+  ],
+  "rule": "VOTE4/4",
+  "multi": "birth)",
+  "en": "birth)",
+  "chosen": "birth)",
+  "who": "pdf_layer,en,multi,tesseract",
+  "truth": "birth)",
+  "pdf_layer": "birth)"
+ },
+ {
+  "n": 13,
+  "idx": 28492,
+  "page": 39,
+  "bbox": [
+   214.0,
+   173.9,
+   232.5,
+   184.5
+  ],
+  "rule": "VOTE2/4",
+  "multi": "under",
+  "en": "unde:r",
+  "chosen": "under",
+  "who": "multi,tesseract",
+  "truth": "under",
+  "pdf_layer": "und1<r"
+ },
+ {
+  "n": 14,
+  "idx": 24552,
+  "page": 33,
+  "bbox": [
+   398.4,
+   502.0,
+   423.7,
+   512.6
+  ],
+  "rule": "SEP=",
+  "multi": "11—213",
+  "en": null,
+  "chosen": "11-213",
+  "who": "multi,tesseract",
+  "truth": "11—213",
+  "pdf_layer": "11~13"
+ },
+ {
+  "n": 15,
+  "idx": 2789,
+  "page": 3,
+  "bbox": [
+   361.9,
+   598.0,
+   385.8,
+   608.5
+  ],
+  "rule": "SEP",
+  "multi": "3—742,13—644",
+  "en": "3742,",
+  "chosen": "3-742,",
+  "who": "pdf_layer",
+  "truth": "3—742,",
+  "pdf_layer": "3-742,"
+ },
+ {
+  "n": 16,
+  "idx": 21558,
+  "page": 29,
+  "bbox": [
+   369.2,
+   503.7,
+   380.4,
+   514.4
+  ],
+  "rule": "VOTE2/4",
+  "multi": "13—26,152",
+  "en": "152",
+  "chosen": "152",
+  "who": "en,tesseract",
+  "truth": "152",
+  "pdf_layer": "162"
+ },
+ {
+  "n": 17,
+  "idx": 27344,
+  "page": 37,
+  "bbox": [
+   203.5,
+   564.6,
+   234.8,
+   575.0
+  ],
+  "rule": "VOTE2/4",
+  "multi": "admission",
+  "en": "a-lmission",
+  "chosen": "admission",
+  "who": "multi,tesseract",
+  "truth": "admission",
+  "pdf_layer": "a,lmission"
+ },
+ {
+  "n": 18,
+  "idx": 21736,
+  "page": 30,
+  "bbox": [
+   254.4,
+   139.7,
+   265.2,
+   151.0
+  ],
+  "rule": "VOTE3/4",
+  "multi": "see",
+  "en": "see",
+  "chosen": "see",
+  "who": "en,multi,tesseract",
+  "truth": "see",
+  "pdf_layer": "aee"
+ },
+ {
+  "n": 19,
+  "idx": 25761,
+  "page": 35,
+  "bbox": [
+   200.2,
+   274.5,
+   204.2,
+   285.0
+  ],
+  "rule": "LEX",
+  "multi": "within",
+  "en": "vithin",
+  "chosen": "within",
+  "who": "multi",
+  "truth": "BAD_BOX",
+  "pdf_layer": "\\\\"
+ },
+ {
+  "n": 20,
+  "idx": 5946,
+  "page": 8,
+  "bbox": [
+   271.2,
+   222.0,
+   297.1,
+   232.8
+  ],
+  "rule": "SEP",
+  "multi": "15—167",
+  "en": "15--167",
+  "chosen": "15-167",
+  "who": "pdf_layer,en,multi",
+  "truth": "15—167",
+  "pdf_layer": "15-167"
+ },
+ {
+  "n": 21,
+  "idx": 25814,
+  "page": 35,
+  "bbox": [
+   454.9,
+   312.5,
+   478.8,
+   322.2
+  ],
+  "rule": "SEP",
+  "multi": "5—183;",
+  "en": "5183;",
+  "chosen": "5-183;",
+  "who": "multi,tesseract",
+  "truth": "5—183;",
+  "pdf_layer": "S-183;"
+ },
+ {
+  "n": 22,
+  "idx": 28571,
+  "page": 39,
+  "bbox": [
+   225.9,
+   294.2,
+   239.2,
+   304.7
+  ],
+  "rule": "LEX",
+  "multi": "nay",
+  "en": "mnay",
+  "chosen": "may",
+  "who": "tesseract",
+  "truth": "may",
+  "pdf_layer": "inay"
+ },
+ {
+  "n": 23,
+  "idx": 6573,
+  "page": 9,
+  "bbox": [
+   288.4,
+   204.7,
+   311.2,
+   215.3
+  ],
+  "rule": "VOTE3/4",
+  "multi": "infaney",
+  "en": "infancy",
+  "chosen": "infancy",
+  "who": "pdf_layer,en,tesseract",
+  "truth": "infancy",
+  "pdf_layer": "infancy"
+ },
+ {
+  "n": 24,
+  "idx": 3683,
+  "page": 5,
+  "bbox": [
+   351.3,
+   133.7,
+   400.7,
+   144.5
+  ],
+  "rule": "MEDOID_FLAG",
+  "multi": "3—275;4—373,702;5—405",
+  "en": null,
+  "chosen": "3-275;4-373,",
+  "who": "pdf_layer",
+  "truth": "3—275;",
+  "pdf_layer": "3--275;4-373,"
+ },
+ {
+  "n": 25,
+  "idx": 14988,
+  "page": 21,
+  "bbox": [
+   262.3,
+   142.1,
+   268.6,
+   152.8
+  ],
+  "rule": "VOTE4/4",
+  "multi": "of",
+  "en": "of",
+  "chosen": "of",
+  "who": "pdf_layer,en,multi,tesseract",
+  "truth": "of",
+  "pdf_layer": "of"
+ },
+ {
+  "n": 26,
+  "idx": 1805,
+  "page": 2,
+  "bbox": [
+   191.5,
+   700.2,
+   223.8,
+   710.6
+  ],
+  "rule": "VOTE4/4",
+  "multi": "eligibility;",
+  "en": "eligibility;",
+  "chosen": "eligibility;",
+  "who": "pdf_layer,en,multi,tesseract",
+  "truth": "eligibility;",
+  "pdf_layer": "eligibility;"
+ },
+ {
+  "n": 27,
+  "idx": 6852,
+  "page": 9,
+  "bbox": [
+   373.3,
+   102.6,
+   394.8,
+   113.4
+  ],
+  "rule": "DISPUTED",
+  "multi": "2-657",
+  "en": "(SJ01",
+  "chosen": "7-667",
+  "who": "",
+  "truth": "7—657",
+  "pdf_layer": "7-667"
+ },
+ {
+  "n": 28,
+  "idx": 17026,
+  "page": 23,
+  "bbox": [
+   490.8,
+   293.0,
+   510.2,
+   303.6
+  ],
+  "rule": "VOTE4/4",
+  "multi": "Crime",
+  "en": "Crime",
+  "chosen": "Crime",
+  "who": "pdf_layer,en,multi,tesseract",
+  "truth": "Crime",
+  "pdf_layer": "Crime"
+ },
+ {
+  "n": 29,
+  "idx": 3372,
+  "page": 4,
+  "bbox": [
+   229.3,
+   482.7,
+   255.3,
+   493.3
+  ],
+  "rule": "SEP=",
+  "multi": "14—155",
+  "en": "14-155",
+  "chosen": "14-155",
+  "who": "pdf_layer,en,multi,tesseract",
+  "truth": "14—155",
+  "pdf_layer": "14-155"
+ },
+ {
+  "n": 30,
+  "idx": 20781,
+  "page": 28,
+  "bbox": [
+   460.7,
+   489.0,
+   487.3,
+   499.7
+  ],
+  "rule": "SEP",
+  "multi": "10—236",
+  "en": "10236",
+  "chosen": "10-236",
+  "who": "pdf_layer,multi,tesseract",
+  "truth": "10—236",
+  "pdf_layer": "10-236"
+ },
+ {
+  "n": 31,
+  "idx": 27330,
+  "page": 37,
+  "bbox": [
+   215.1,
+   536.7,
+   236.9,
+   546.3
+  ],
+  "rule": "SEP",
+  "multi": "1–682",
+  "en": "1-682",
+  "chosen": "1-682",
+  "who": "pdf_layer,en,multi",
+  "truth": "1—682",
+  "pdf_layer": "1--682"
+ },
+ {
+  "n": 32,
+  "idx": 9719,
+  "page": 13,
+  "bbox": [
+   203.0,
+   287.9,
+   205.2,
+   298.6
+  ],
+  "rule": "DISPUTED",
+  "multi": "421",
+  "en": null,
+  "chosen": "l",
+  "who": "",
+  "truth": "BAD_BOX",
+  "pdf_layer": "l"
+ },
+ {
+  "n": 33,
+  "idx": 25613,
+  "page": 35,
+  "bbox": [
+   194.0,
+   163.1,
+   208.1,
+   173.6
+  ],
+  "rule": "VOTE2/4",
+  "multi": "loss;",
+  "en": "los;",
+  "chosen": "loss;",
+  "who": "multi,tesseract",
+  "truth": "loss;",
+  "pdf_layer": "los:1;"
+ },
+ {
+  "n": 34,
+  "idx": 25989,
+  "page": 35,
+  "bbox": [
+   190.1,
+   455.1,
+   213.4,
+   465.7
+  ],
+  "rule": "LEX",
+  "multi": "system",
+  "en": "systam",
+  "chosen": "system",
+  "who": "multi",
+  "truth": "system",
+  "pdf_layer": "syst?m"
+ },
+ {
+  "n": 35,
+  "idx": 11364,
+  "page": 15,
+  "bbox": [
+   165.9,
+   347.6,
+   189.3,
+   358.1
+  ],
+  "rule": "SEP",
+  "multi": "3—502,641;5—708",
+  "en": "3502,",
+  "chosen": "3-502,",
+  "who": "pdf_layer,tesseract",
+  "truth": "3—502,",
+  "pdf_layer": "3-502,"
+ },
+ {
+  "n": 36,
+  "idx": 24542,
+  "page": 33,
+  "bbox": [
+   176.8,
+   493.3,
+   204.7,
+   503.7
+  ],
+  "rule": "VOTE2/4",
+  "multi": "warningg,",
+  "en": "warning,",
+  "chosen": "warning,",
+  "who": "en,tesseract",
+  "truth": "warning;",
+  "pdf_layer": "warnini:;"
+ },
+ {
+  "n": 37,
+  "idx": 9046,
+  "page": 12,
+  "bbox": [
+   202.8,
+   337.0,
+   227.3,
+   347.8
+  ],
+  "rule": "SEP",
+  "multi": "3—475;",
+  "en": "3475;",
+  "chosen": "3-475;",
+  "who": "pdf_layer,multi,tesseract",
+  "truth": "3—475;",
+  "pdf_layer": "3-475;"
+ },
+ {
+  "n": 38,
+  "idx": 8701,
+  "page": 11,
+  "bbox": [
+   223.2,
+   560.9,
+   237.4,
+   571.4
+  ],
+  "rule": "DISPUTED",
+  "multi": "ence",
+  "en": "resicence",
+  "chosen": "ence",
+  "who": "",
+  "truth": "ence",
+  "pdf_layer": "ence"
+ },
+ {
+  "n": 39,
+  "idx": 19064,
+  "page": 26,
+  "bbox": [
+   171.4,
+   646.3,
+   196.9,
+   655.8
+  ],
+  "rule": "SEP=",
+  "multi": "15—191",
+  "en": "15-191",
+  "chosen": "15-191",
+  "who": "en,multi,tesseract",
+  "truth": "15—191",
+  "pdf_layer": "16-191"
+ },
+ {
+  "n": 40,
+  "idx": 5257,
+  "page": 7,
+  "bbox": [
+   225.5,
+   490.2,
+   241.0,
+   500.8
+  ],
+  "rule": "LEX",
+  "multi": "proc.",
+  "en": "prpc.",
+  "chosen": "proc.",
+  "who": "multi",
+  "truth": "proc.",
+  "pdf_layer": "pnc."
+ },
+ {
+  "n": 41,
+  "idx": 21380,
+  "page": 29,
+  "bbox": [
+   345.0,
+   208.0,
+   368.5,
+   218.7
+  ],
+  "rule": "SEP",
+  "multi": "7-556;8—16",
+  "en": "7556;",
+  "chosen": "7-556;",
+  "who": "pdf_layer",
+  "truth": "7—556;",
+  "pdf_layer": "7-556;"
+ },
+ {
+  "n": 42,
+  "idx": 3395,
+  "page": 4,
+  "bbox": [
+   346.6,
+   501.3,
+   382.4,
+   511.3
+  ],
+  "rule": "LEX",
+  "multi": "“engaging\"",
+  "en": "\"engaging\"",
+  "chosen": "\"engaging\"",
+  "who": "en",
+  "truth": "\"engaging\"",
+  "pdf_layer": "ueugaging\""
+ },
+ {
+  "n": 43,
+  "idx": 28390,
+  "page": 38,
+  "bbox": [
+   505.7,
+   615.3,
+   524.2,
+   625.4
+  ],
+  "rule": "VOTE3/4",
+  "multi": "immi-",
+  "en": "immi-",
+  "chosen": "immi-",
+  "who": "en,multi,tesseract",
+  "truth": "immi-",
+  "pdf_layer": "lmmJ."
+ },
+ {
+  "n": 44,
+  "idx": 22217,
+  "page": 30,
+  "bbox": [
+   171.0,
+   520.6,
+   194.0,
+   531.4
+  ],
+  "rule": "SEP",
+  "multi": "3—172",
+  "en": "3--172",
+  "chosen": "3-172",
+  "who": "en,multi",
+  "truth": "3—172",
+  "pdf_layer": "8-172"
+ },
+ {
+  "n": 45,
+  "idx": 11320,
+  "page": 15,
+  "bbox": [
+   229.3,
+   310.5,
+   250.9,
+   321.0
+  ],
+  "rule": "SEP=",
+  "multi": "3—723",
+  "en": "3-723",
+  "chosen": "3-723",
+  "who": "pdf_layer,en,multi,tesseract",
+  "truth": "3—723",
+  "pdf_layer": "3-723"
+ },
+ {
+  "n": 46,
+  "idx": 5261,
+  "page": 7,
+  "bbox": [
+   320.7,
+   490.2,
+   327.2,
+   500.8
+  ],
+  "rule": "VOTE4/4",
+  "multi": "at",
+  "en": "at",
+  "chosen": "at",
+  "who": "pdf_layer,en,multi,tesseract",
+  "truth": "at",
+  "pdf_layer": "at"
+ },
+ {
+  "n": 47,
+  "idx": 8447,
+  "page": 11,
+  "bbox": [
+   204.6,
+   375.7,
+   225.4,
+   386.2
+  ],
+  "rule": "VOTE3/4",
+  "multi": "citizen",
+  "en": "citizen",
+  "chosen": "citizen",
+  "who": "en,multi,tesseract",
+  "truth": "citizen",
+  "pdf_layer": "citize11"
+ },
+ {
+  "n": 48,
+  "idx": 7051,
+  "page": 9,
+  "bbox": [
+   405.0,
+   460.4,
+   426.4,
+   470.9
+  ],
+  "rule": "VOTE4/4",
+  "multi": "father,",
+  "en": "father,",
+  "chosen": "father,",
+  "who": "pdf_layer,en,multi,tesseract",
+  "truth": "father,",
+  "pdf_layer": "father,"
+ },
+ {
+  "n": 49,
+  "idx": 1275,
+  "page": 1,
+  "bbox": [
+   377.4,
+   488.0,
+   406.1,
+   498.5
+  ],
+  "rule": "VOTE3/4",
+  "multi": "241(a)(9);",
+  "en": "241(a)(9);",
+  "chosen": "241(a)(9);",
+  "who": "en,multi,tesseract",
+  "truth": "241(a)(9);",
+  "pdf_layer": "24l(a)(9);"
+ },
+ {
+  "n": 50,
+  "idx": 2837,
+  "page": 3,
+  "bbox": [
+   209.1,
+   636.4,
+   229.0,
+   647.1
+  ],
+  "rule": "VOTE3/4",
+  "multi": "effect;",
+  "en": "effect;",
+  "chosen": "effect;",
+  "who": "en,multi,tesseract",
+  "truth": "effect;",
+  "pdf_layer": "emct;"
+ },
+ {
+  "n": 51,
+  "idx": 6700,
+  "page": 9,
+  "bbox": [
+   182.6,
+   435.7,
+   208.2,
+   446.5
+  ],
+  "rule": "SEP",
+  "multi": "11-911",
+  "en": "11911",
+  "chosen": "11-911",
+  "who": "multi,tesseract",
+  "truth": "11—911",
+  "pdf_layer": "11-9\\l"
+ },
+ {
+  "n": 52,
+  "idx": 22933,
+  "page": 31,
+  "bbox": [
+   348.8,
+   480.2,
+   374.8,
+   490.8
+  ],
+  "rule": "SEP",
+  "multi": "14467",
+  "en": "14-467",
+  "chosen": "14-467",
+  "who": "pdf_layer,en",
+  "truth": "14—467",
+  "pdf_layer": "14-467"
+ },
+ {
+  "n": 53,
+  "idx": 16867,
+  "page": 23,
+  "bbox": [
+   213.0,
+   672.5,
+   245.3,
+   683.0
+  ],
+  "rule": "VOTE2/4",
+  "multi": "thereafter",
+  "en": "the-reafter",
+  "chosen": "thereafter",
+  "who": "multi,tesseract",
+  "truth": "thereafter",
+  "pdf_layer": "the:·eafter"
+ },
+ {
+  "n": 54,
+  "idx": 12288,
+  "page": 16,
+  "bbox": [
+   416.3,
+   418.5,
+   435.7,
+   429.0
+  ],
+  "rule": "VOTE3/4",
+  "multi": "injury",
+  "en": "injury",
+  "chosen": "injury",
+  "who": "en,multi,tesseract",
+  "truth": "injury",
+  "pdf_layer": "iajury"
+ },
+ {
+  "n": 55,
+  "idx": 1108,
+  "page": 1,
+  "bbox": [
+   409.3,
+   204.4,
+   435.0,
+   214.5
+  ],
+  "rule": "SEP",
+  "multi": "12—407",
+  "en": "12407",
+  "chosen": "12-407",
+  "who": "pdf_layer,multi,tesseract",
+  "truth": "12—407",
+  "pdf_layer": "12-407"
+ },
+ {
+  "n": 56,
+  "idx": 3164,
+  "page": 4,
+  "bbox": [
+   384.2,
+   296.3,
+   390.7,
+   307.0
+  ],
+  "rule": "VOTE4/4",
+  "multi": "of",
+  "en": "of",
+  "chosen": "of",
+  "who": "pdf_layer,en,multi,tesseract",
+  "truth": "of",
+  "pdf_layer": "of"
+ },
+ {
+  "n": 57,
+  "idx": 7364,
+  "page": 10,
+  "bbox": [
+   281.6,
+   398.8,
+   321.2,
+   409.6
+  ],
+  "rule": "VOTE2/4",
+  "multi": "101(b)(1)(B);",
+  "en": "10l(b)(l)(B);",
+  "chosen": "101(b)(1)(B);",
+  "who": "multi,tesseract",
+  "truth": "101(b)(1)(B);",
+  "pdf_layer": "lOl(b)(l)(B);"
+ },
+ {
+  "n": 58,
+  "idx": 24192,
+  "page": 33,
+  "bbox": [
+   196.3,
+   196.9,
+   229.7,
+   207.9
+  ],
+  "rule": "VOTE3/4",
+  "multi": "Exclusion",
+  "en": "Exclusion",
+  "chosen": "Exclusion",
+  "who": "en,multi,tesseract",
+  "truth": "Exclusion",
+  "pdf_layer": "E~clusion"
+ },
+ {
+  "n": 59,
+  "idx": 5422,
+  "page": 7,
+  "bbox": [
+   522.1,
+   73.2,
+   539.6,
+   83.7
+  ],
+  "rule": "VOTE3/4",
+  "multi": "proc.,",
+  "en": "proc.,",
+  "chosen": "proc.,",
+  "who": "en,multi,tesseract",
+  "truth": "proc.",
+  "pdf_layer": "proc_,"
+ },
+ {
+  "n": 60,
+  "idx": 20488,
+  "page": 28,
+  "bbox": [
+   191.5,
+   665.8,
+   213.9,
+   676.5
+  ],
+  "rule": "SEP",
+  "multi": "2—587",
+  "en": "2587",
+  "chosen": "2-587",
+  "who": "pdf_layer,multi,tesseract",
+  "truth": "2—587",
+  "pdf_layer": "2-587"
+ }
+]

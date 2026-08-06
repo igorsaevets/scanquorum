@@ -1,0 +1,26 @@
+# ScanQuorum dependencies.
+#
+# These are the versions the numbers in README.md were measured with, on
+# 2026-08-06, Python 3.14.6, Windows 11. They are pinned with `==` on purpose.
+#
+# WHY PINS AND NOT RANGES. This project publishes accuracy figures. Those figures
+# are a property of a specific set of model weights, and RapidOCR selects its
+# weights by enum (PP-OCRv6 detector, PP-OCRv5 recogniser) whose contents the
+# upstream package is free to change in a patch release. A floating range would
+# let a `pip install` silently move the models under a published number. If you
+# relax these, re-measure before quoting any figure from the README.
+#
+# Install:  python -m pip install -r requirements.txt
+# Verify:   python -m scanquorum doctor
+#
+# THIS FILE IS NOT ENOUGH ON ITS OWN. Tesseract is a native binary and pip cannot
+# install it. See INSTALL.md. Without it the run still works, but two of the three
+# OCR voters share a text detector, so you are left with ONE independent opinion
+# and the quorum means much less than the engine count suggests. `doctor` exits 1
+# and says so rather than letting that pass quietly.
+
+pymupdf==1.28.0
+rapidocr==3.9.2
+onnxruntime==1.28.0
+numpy==2.4.6
+pillow==12.3.0

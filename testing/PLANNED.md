@@ -68,3 +68,23 @@ Standing rule rather than a feature: no ensemble artefact goes into a folder of 
 documents until that document class has a measured reference standard. An unmeasured
 artefact in a legal folder looks exactly as authoritative as a measured one, and nothing
 downstream can tell the difference.
+
+---
+
+## P8 — render a crop for every unconfirmed word
+
+**Status: not started. Named here because the README promised it and did not deliver it.**
+
+Until 0.2.0 the README said the tool "will render each one as a cropped image so a person can
+look at it in three seconds", and two other passages leaned on that promise. No code path in
+`build` renders an image. The renderer exists in the unpublished lab tree, where the reviewing
+was done by hand at 900 dpi; it was never ported.
+
+What it needs: for each entry in the unconfirmed index, render its bounding box from the page
+at a readable dpi with a little padding, write it beside the index, and reference it from the
+JSON. `scanquorum/verify_ai.py` already contains a working `_png(pdf, page, bbox, dpi, pad)`
+that does exactly this for the vision-model path, so the work is wiring rather than invention.
+
+Why it matters more than it looks: the human-review step is the entire justification for
+refusing to guess. Coordinates are a promise that someone will open a PDF viewer. A crop is
+three seconds.

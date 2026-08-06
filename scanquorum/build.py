@@ -28,8 +28,12 @@ import collections
 
 from . import vote
 from . import layout
+from . import __version__
 
-VERSION = "1.0"
+# Module version, bumped when this file's behaviour changes. Distinct from the
+# package version above on purpose: the sidecar header records both, so a reader
+# who finds an odd number can tell whether the pipeline or the packaging moved.
+VERSION = "1.1"
 
 # Which engine's line boxes define the page's layout, in order of preference.
 # STATED, not alphabetical -- see the note at the frame selection below. The
@@ -269,20 +273,79 @@ def build(pdf, engines=("rapidocr_multi", "rapidocr_en", "tesseract"),
     # majority carried by rapidocr_multi + rapidocr_en is one shared text detector
     # agreeing with itself, and counting it as two independent confirmations is the
     # same overstatement the tool exists to catch elsewhere.
-    QUORUM_RULES = ("NUM", "LEX", "PATTERN")
-    quorum = weak = 0
+    # 🔴 A DETERMINISTIC REPAIR IS NOT A VOTE, AND THIS FIELD CALLED IT ONE.
+    #
+    # Until v1.1 `accepted_by_quorum` counted VOTE* together with SEP/NUM/LEX/
+    # PATTERN. Measured on the 41-page EOIR index, that is 29,160 of 29,853 words
+    # (97.68 %) reported as "read identically by at least two independent OCR
+    # engines" -- while the number of words that actually won a vote is 25,838
+    # (86.55 %). An eleven-point overstatement, in the machine-readable header, in
+    # the one field a downstream model is most likely to trust, in a tool whose
+    # entire pitch is that it does not overstate.
+    #
+    # LEX is the clearest case: it picks the candidate that appears in a lexicon.
+    # That is a dictionary breaking a tie, not a second engine agreeing. PATTERN
+    # is a regex doing the same. Both are defensible ways to choose; neither is
+    # corroboration, and the difference is the whole product.
+    #
+    # So the three buckets below PARTITION the corpus and the assert proves it.
+    # `classify` is deliberately total: an unrecognised rule raises instead of
+    # falling into a bucket, because the previous version's failure mode was
+    # exactly a rule quietly landing on the flattering side of the line.
+    # The buckets are ordered from strongest evidence to none, and the DIFFERENCE
+    # between the first two is the one that matters most in this corpus: `SEP`
+    # means the engines agreed on the digits and disagreed on the punctuation, and
+    # a punctuation disagreement in a case citation is `12-869` against `12369`.
+    # Folding that into "read identically" is precisely the claim we cannot make.
+    EXACT, SUBSTANCE, RULED, UNCONFIRMED = "exact", "substance", "ruled", "unconfirmed"
+
+    def classify(rule):
+        """Total by construction. An unrecognised rule raises rather than landing
+        in a bucket -- the previous version's failure was a rule quietly falling on
+        the flattering side of the line, so silence is the thing to forbid."""
+        base = rule.split("|")[0]
+        if base.startswith("VOTE"):
+            try:
+                k = int(base[4:].split("/")[0])          # "VOTE3/4" -> 3
+            except ValueError:
+                raise SystemExit("unparseable VOTE rule %r -- refusing to count it" % rule)
+            return EXACT if k >= 2 else UNCONFIRMED      # k == 1 is not a quorum
+        if base in ("SEP", "SEP=", "NUM"):
+            return SUBSTANCE
+        if base in ("LEX", "PATTERN"):
+            return RULED
+        if base in ("DISPUTED", "MEDOID_FLAG", "ONLY_ONE", "EMPTY"):
+            return UNCONFIRMED
+        raise SystemExit(
+            "UNKNOWN RULE %r in the evidence. Add it to classify() in build.py and decide "
+            "deliberately which bucket it belongs to. Refusing to guess -- guessing here is "
+            "how the header came to overstate by eleven points." % rule)
+
+    counts = {EXACT: 0, SUBSTANCE: 0, RULED: 0, UNCONFIRMED: 0}
+    weak = 0
     for r in ev:
-        rule = r.get("rule", "")
-        if not (rule.startswith("VOTE") or rule.startswith("SEP") or rule in QUORUM_RULES):
-            continue
-        backers = set((r.get("who") or "").split(","))
-        quorum += 1
-        # Weak when every engine that backed it comes from one correlated group and
-        # nothing outside that group agreed.
-        for group in CORRELATED:
-            if backers and backers <= group:
-                weak += 1
-                break
+        bucket = classify(r.get("rule", ""))
+        counts[bucket] += 1
+        if bucket == EXACT:
+            # Weak when every engine that backed it comes from one correlated group
+            # and nothing outside that group agreed.
+            backers = set((r.get("who") or "").split(","))
+            for group in CORRELATED:
+                if backers and backers <= group:
+                    weak += 1
+                    break
+    assert sum(counts.values()) == len(ev), (
+        "the buckets must account for every word: %r != %d" % (counts, len(ev)))
+    exact, substance, ruled = counts[EXACT], counts[SUBSTANCE], counts[RULED]
+    unconf_n = counts[UNCONFIRMED]
+    # The header says "N unconfirmed, listed in <file>". That sentence is only true
+    # if N is the length of that file. Tying the two together in an assert is what
+    # makes it a fact rather than a caption -- the earlier version of this header
+    # named a count and a file that did not match, and nothing noticed.
+    assert unconf_n == len(unconf), (
+        "the unconfirmed index would be incomplete: %d words are unconfirmed but the index "
+        "holds %d. Every unconfirmed word must be listed, or the header lies about where "
+        "to find them." % (unconf_n, len(unconf)))
     hdr = {
         "source_pdf": pdf.name,
         "source_sha256": _sha256(pdf),
@@ -298,23 +361,29 @@ def build(pdf, engines=("rapidocr_multi", "rapidocr_en", "tesseract"),
                          if frames_used else None),
         "frame_engine_pages": frames_used,
         "words": len(ev),
-        "accepted_by_quorum": quorum,
-        "quorum_from_correlated_voters_only": weak,
-        "unconfirmed": len(unconf),
+        # These four sum to `words`. The assert above enforces it, and they are
+        # reported separately because they are NOT the same strength of evidence.
+        "agreed_exactly": exact,
+        "agreed_on_digits_not_punctuation": substance,
+        "chosen_by_rule_no_second_engine": ruled,
+        "unconfirmed": unconf_n,
+        "agreed_exactly_from_correlated_voters_only": weak,
         "unconfirmed_index": stem + ".unconfirmed.json",
         "existing_layer_producer": meta.get("producer") or "",
-        "generated_by": "scanquorum " + VERSION,
+        "generated_by": "scanquorum %s (build.py v%s)" % (__version__, VERSION),
     }
     warn = (
-        "%d of the %d words in this file were read identically by at least two independent "
-        "OCR engines. The other %d were NOT, and every one of them is listed in %s with its "
-        "page and coordinates -- they include words that only a single engine saw as well as "
-        "words the engines could not reconcile. THE BODY TEXT BELOW DOES NOT MARK THEM "
-        "INLINE, so before quoting any passage, check it against that index; if a word from "
-        "it appears in what you are about to quote, say that the word is unverified rather "
-        "than presenting it as the text of the document. No language model wrote or corrected "
-        "any character in this file."
-        % (quorum, len(ev), len(ev) - quorum, stem + ".unconfirmed.json")
+        "Of the %d words in this file, %d were read IDENTICALLY by at least two independent "
+        "OCR engines. A further %d were read with the same digits but different punctuation "
+        "(the engines saw the same number and disagreed about a hyphen or a space); for a "
+        "case or docket citation that difference can be the difference between two documents. "
+        "Another %d were chosen by dictionary or by pattern with NO second engine agreeing. "
+        "The remaining %d are not confirmed at all and are listed in %s with page and "
+        "coordinates. THE BODY TEXT BELOW MARKS NONE OF THESE INLINE, so before quoting any "
+        "passage, check it against that index; if a word from it appears in what you are "
+        "about to quote, say that the word is unverified rather than presenting it as the "
+        "text of the document. No language model wrote or corrected any character in this file."
+        % (len(ev), exact, substance, ruled, unconf_n, stem + ".unconfirmed.json")
     )
     if len(used) < 3:
         warn = ("THIS RUN HAD ONLY %d ENGINES. Nothing here is confirmed by a quorum. "
@@ -331,9 +400,12 @@ def build(pdf, engines=("rapidocr_multi", "rapidocr_en", "tesseract"),
     # pointed out that the header's warning is addressed to an AI reader, and a
     # person who scrolls past the front matter -- or a RAG chunker that drops it --
     # sees nothing at all. One line costs nothing and closes that gap.
-    md.append("> **%d of the %d words below are UNVERIFIED.** They are listed in `%s`."
-              % (len(ev) - quorum, len(ev), stem + ".unconfirmed.json"))
-    md.append("> They are not marked inline, so check that index before quoting any passage.")
+    md.append("> **%d of the %d words below (%.2f %%) were NOT read identically by two "
+              "independent OCR engines.** Of those, %d are listed by page and coordinates in "
+              "`%s`; the rest were settled by a punctuation rule, a dictionary or a pattern."
+              % (len(ev) - exact, len(ev), 100.0 * (len(ev) - exact) / max(len(ev), 1),
+                 unconf_n, stem + ".unconfirmed.json"))
+    md.append("> None of them is marked inline, so check that index before quoting any passage.")
     md.append("")
     for pi, text in pages_md:
         md.append("<!-- page %d -->" % (pi + 1))
@@ -349,13 +421,21 @@ def build(pdf, engines=("rapidocr_multi", "rapidocr_en", "tesseract"),
     print("\n=== HOW EACH WORD WAS DECIDED ===")
     for r, n in sorted(stats.items(), key=lambda t: -t[1]):
         print("  %-22s %7d  (%.2f%%)" % (r, n, 100.0 * n / max(len(ev), 1)))
-    print("\n  words                : %d" % len(ev))
-    print("  accepted by quorum   : %d  (%.2f%%)" % (quorum, 100.0 * quorum / max(len(ev), 1)))
+    tot = max(len(ev), 1)
+    print("\n  words                            : %d" % len(ev))
+    print("  read IDENTICALLY by >=2 engines  : %6d  (%.2f%%)  <- the only strong claim"
+          % (exact, 100.0 * exact / tot))
     if weak:
         print("    of which carried ONLY by voters that share a detector: %d (%.2f%%)"
-              % (weak, 100.0 * weak / max(quorum, 1)))
+              % (weak, 100.0 * weak / max(exact, 1)))
         print("    those are one opinion agreeing with itself -- weaker than the count.")
-    print("  shown to you         : %d  (%.2f%%)" % (len(unconf), 100.0 * len(unconf) / max(len(ev), 1)))
+    print("  same digits, different punctuation: %6d  (%.2f%%)" % (substance, 100.0 * substance / tot))
+    print("  chosen by dictionary or pattern  : %6d  (%.2f%%)  no second engine agreed"
+          % (ruled, 100.0 * ruled / tot))
+    print("  not confirmed, shown to you      : %6d  (%.2f%%)" % (unconf_n, 100.0 * unconf_n / tot))
+    print("  " + "-" * 62)
+    print("  %d + %d + %d + %d = %d" % (exact, substance, ruled, unconf_n,
+                                        exact + substance + ruled + unconf_n))
     print("\n  -> %s.md" % stem)
     print("  -> %s.unconfirmed.json" % stem)
     print("  -> %s.evidence.json" % stem)

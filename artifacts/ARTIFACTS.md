@@ -68,9 +68,19 @@ the reference is wrong in exactly the same way. A crop-relative gold standard ca
 find a truncation. This is a hole in the measurement, not just in the tool, and no amount
 of additional sampling closes it.
 
-**Partial defence, shipped:** `--detect-truncation` runs a second engine with independent
-layout analysis and flags any token that is a proper substring of what that engine read at
-overlapping coordinates. It is a detector, not a fix.
+**Partial defence, NOT SHIPPED.** 🔴 This section previously read "Partial defence, shipped:
+`--detect-truncation` ...". **There is no such flag.** A grep of this repository for
+`detect.truncation` matches this paragraph and nothing else; `scanquorum/build.py` declares
+only `--engines`, `--out-dir` and `--dpi`. The detector exists as a script in the unpublished
+lab tree and has never been wired into the CLI.
+
+The claim was caught by an outside reviewer, and it is the worst kind of error this project
+can make: it told a reader that the **largest known residual error class already had a
+defence**. `testing/PLANNED.md` records the real state as P1, not started.
+
+What the detector would do, when it exists: run an engine with independent layout analysis and
+flag any token that is a proper substring of what that engine read at overlapping coordinates.
+It would be a detector, not a fix.
 
 ### B2. Words no OCR engine ever sees
 **340 words** in the index were present in the original text layer and read by none of the

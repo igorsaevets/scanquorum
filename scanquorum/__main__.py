@@ -2,6 +2,7 @@ import sys
 
 USAGE = """scanquorum <command> [options]
 
+  doctor             check the install and say exactly what is missing. RUN THIS FIRST.
   build <pdf>        read a PDF with every installed engine, write .md + unconfirmed index
   verify-ai          ask a vision model about the unconfirmed places (it may only CHOOSE)
   version
@@ -15,6 +16,9 @@ def main():
         print(USAGE)
         return 0
     cmd, rest = sys.argv[1], sys.argv[2:]
+    if cmd == "doctor":
+        from .doctor import main as m
+        return m(rest)
     if cmd == "build":
         from .build import main as m
         return m(rest)
