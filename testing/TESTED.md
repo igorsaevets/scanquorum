@@ -111,3 +111,79 @@ See T9 for what the measurement showed about trusting models to abstain.
 99.15 % figure is measured on one document and does not transfer. An unmeasured artefact
 sitting in a folder of legal documents looks exactly as authoritative as a measured one.
 Moved to [TO-TEST.md](TO-TEST.md) as G1.
+
+---
+
+## Round 3 (2026-08-06): six external reviewers, and what execution said afterwards
+
+### T7 — the header's `accepted_by_quorum` overstated by eleven points
+
+**Hypothesis:** the field means what it says.
+**Method:** counted the rules it includes against the rule census of `merged_evidence.json`
+(29,853 records, the 41-page EOIR index).
+**Result:** it counted `VOTE*` together with `SEP`/`NUM`/`LEX`/`PATTERN`, giving 29,160 (97.68 %)
+as "read identically by at least two independent OCR engines". The number that actually won a
+vote is 25,838 (86.55 %). `LEX` picks whichever candidate is in a dictionary, which is a lookup
+breaking a tie, not a second engine agreeing.
+**Adopted:** four fields that partition the corpus, with an assert. `classify()` raises on an
+unknown rule rather than assigning one.
+**Verified by running it:** on `samples/02`, 856 + 1 + 0 + 28 = 885. Both asserts hold.
+
+### T8 — the gold set is 60 and the denominator is 56, and nobody had said why
+
+**Method:** exported the labelled set and counted.
+**Result:** 60 crops labelled, **4 are `BAD_BOX`** (the word box inherited from the PDF does not
+correspond to a token), 56 scored. Both numbers were correct and neither was explained.
+**Adopted:** published as `tests/fixtures/goldset.json`; `tests/test_goldset.py` recomputes
+everything the README quotes.
+
+### T9 — every voter against the pixels, with intervals
+
+| voter | agrees | 95 % Wilson |
+|---|---:|---|
+| PDF text layer | 46.4 % | [34.0, 59.3] |
+| `rapidocr_multi` | 78.6 % | [66.2, 87.3] |
+| `rapidocr_en` | 60.4 % | [46.9, 72.4] |
+| **ensemble** | **94.6 %** | [85.4, 98.2] |
+
+n = 56, **stratified toward contested decisions**, so these are not document accuracies. The
+16-point gap between the ensemble and the best single voter is the finding; the absolute values
+are not.
+
+### T10 — the fourth engine, measured end to end rather than argued about
+
+Two external reviewers disagreed about which engine the fourth is and therefore about whether
+the 3-vs-4 comparison means anything. Settled by running both on `samples/02`:
+
+| | 3 engines | 4 engines (+ Tesseract) |
+|---|---:|---:|
+| read identically by >= 2 | 848 | **856** |
+| not confirmed | 36 | **28** |
+| carried only by the correlated pair | 7 | **4** |
+| independent OCR opinions | **1** | **2** |
+
+The fourth engine is Tesseract, and it is the only one with its own layout analysis. Without it
+the two RapidOCR voters share a detector and there is one independent opinion, not two.
+
+### T11 — `doctor` catches the silent degradation, and was itself wrong twice
+
+**Method:** ran the pipeline with Tesseract present but not on `PATH`.
+**Result:** a complete, confident, well-formed output built from a degraded quorum, with nothing
+in the file saying the fourth voice was missing.
+**Adopted:** `scanquorum doctor`, exit 0/1/2, remediation per failure.
+**Its own defects, both dead on first execution:** it handed PNG bytes to adapters that take a
+PDF path (reported three broken engines on a machine where all three worked), and it guessed the
+import name `rapidocr_onnxruntime`, which does not exist. `tests/test_doctor.py` now covers both,
+plus a negative control that points `TESSERACT_EXE` at a file that is not there.
+
+### R3 — REJECTED: claiming novelty from a failed search
+
+The README said "what we did not find was the combination this repository implements". Six
+reviewers were then asked to find prior art and found ROVER, ISRI `vote` (which already broke
+ties with heuristics), Lund and Ringger, Handley, Chow, selective prediction, Calamari and
+OCR-D. The section was rewritten to say most of this is thirty years old.
+
+The narrow claim that survived: **no reviewer found prior work that tests an OCR ensemble's tie
+breaks for determinism under permutation of engine order.** Three of the six documented their
+search terms; the other three asserted it without showing their work, and one had no search
+tools at all. So the claim rests on three documented negatives, and it is stated that way.

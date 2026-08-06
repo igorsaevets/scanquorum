@@ -12,3 +12,10 @@ ai_verdicts.json
 human_verdicts.json
 pending.json
 crops/
+
+# LaTeX build artefacts. The .tex and the .pdf are tracked; nothing else is.
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.xdv
+paper/*.synctex.gz
