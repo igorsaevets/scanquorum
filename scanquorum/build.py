@@ -106,9 +106,31 @@ def build(pdf, engines=("rapidocr_multi", "rapidocr_en", "tesseract"),
         print("  🔴 engine NOT available: %-16s %s" % (n, why))
     used = ["pdf_layer"] + sorted(ocr)
     print("  engines voting: %d  (%s)" % (len(used), ", ".join(used)))
-    if len(used) < 3:
-        print("  ⚠  fewer than three engines. A quorum of two is a coin toss with")
-        print("     extra steps; treat every word in this run as unconfirmed.")
+    # 🔴 THIS WARNING WAS OFF BY ONE, AND AN OUTSIDE REVIEWER FOUND IT.
+    # `used` includes "pdf_layer", so on the commonest configuration -- Tesseract
+    # not installed, two RapidOCR voters present -- len(used) is exactly 3 and the
+    # warning never fired. That is the install most people will have, and it is
+    # precisely the one that needed warning: the two RapidOCR voters SHARE A
+    # DETECTOR, so "three engines" there is the PDF layer plus roughly one and a
+    # bit opinions. Counting voters is not the same as counting independence.
+    CORRELATED = [{"rapidocr_multi", "rapidocr_en"}]
+    independent = len(ocr)
+    for group in CORRELATED:
+        overlap = group & set(ocr)
+        if len(overlap) > 1:
+            independent -= len(overlap) - 1
+    print("  independent OCR opinions: %d (voters that do not share a detector)" % independent)
+    if len(ocr) < 2:
+        print("  ⚠  fewer than two OCR engines besides the PDF's own text layer.")
+        print("     There is no quorum here at all -- treat every word as unconfirmed.")
+    elif independent < 3:
+        print("  ⚠  only %d INDEPENDENT OCR opinions." % independent)
+        for group in CORRELATED:
+            if len(group & set(ocr)) > 1:
+                print("     %s share a text detector, so they are nearer one voter than two;"
+                      % " and ".join(sorted(group & set(ocr))))
+                print("     their agreement is weaker evidence than the count suggests.")
+        print("     Install Tesseract for a voter that draws its own boxes.")
 
     lex = lexicon if lexicon is not None else {}
     ev, unconf, stats = [], [], collections.Counter()
