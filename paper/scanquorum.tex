@@ -47,8 +47,8 @@ estimate. Code, the reference standard and the replay fixture are public.
 
 \section{Introduction}
 
-The expensive failure in document processing is not a wrong character. It is a wrong
-character that nothing downstream can distinguish from a right one.
+Wrong characters are cheap. What costs money is a wrong character that nothing downstream
+can tell apart from a right one.
 
 This has become sharper with retrieval augmented generation. A pipeline that runs OCR
 over a scanned filing and hands the result to a language model will reproduce a misread
@@ -77,9 +77,9 @@ several speech recognisers into a word transition network and votes over it, opt
 weighting by each recogniser's confidence. The technique moved into document recognition
 quickly. The ISRI toolkit at UNLV \cite{rice1994,nartker2005} shipped \texttt{synctext}
 for alignment and \texttt{vote} for combination, and the documentation of \texttt{vote}
-records that it applies majority voting with heuristics to break ties. That sentence is
-worth pausing on, because it means the problem in Section~\ref{sec:audit} was visible in
-1996 to anyone who asked what the heuristics were.
+records that it applies majority voting with heuristics to break ties. The problem in
+Section~\ref{sec:audit} was therefore visible in 1996 to anyone who asked what those
+heuristics were, and we have found no indication that anyone did.
 
 Lund and Ringger \cite{lund2009} align several engines at the character level using an
 admissible A$^{\star}$ heuristic and select from the resulting lattice with a dictionary,
@@ -224,19 +224,21 @@ Section~\ref{sec:badbox}, leaving 56 scored positions.
 
 \begin{table}[h]
 \centering
-\begin{tabular}{lrc}
+\begin{tabular}{lrrc}
 \toprule
-voter & agrees with the page & 95\% interval \\
+voter & agrees with the page & counted & 95\% interval \\
 \midrule
-the PDF's own text layer & 46.4\% & [34.0, 59.3] \\
-\texttt{rapidocr\_multi} & 78.6\% & [66.2, 87.3] \\
-\texttt{rapidocr\_en} & 60.4\% & [46.9, 72.4] \\
-\textbf{the ensemble} & \textbf{94.6\%} & \textbf{[85.4, 98.2]} \\
+the PDF's own text layer & 46.4\% & 26 / 56 & [34.0, 59.3] \\
+\texttt{rapidocr\_multi} & 78.6\% & 44 / 56 & [66.2, 87.3] \\
+\texttt{rapidocr\_en} & 60.4\% & 32 / 53 & [46.9, 72.4] \\
+\textbf{the ensemble} & \textbf{94.6\%} & \textbf{53 / 56} & \textbf{[85.4, 98.2]} \\
 \bottomrule
 \end{tabular}
-\caption{Each voter and the ensemble against a human reading of the page, on 56 scored
-positions. Intervals are Wilson. The sample is stratified toward contested decisions, so
-these are not document level accuracies and must not be read as such.}
+\caption{Each voter and the ensemble against a human reading of the page. Intervals are
+Wilson. Note that \texttt{rapidocr\_en} has a smaller denominator: it returned nothing at all
+for three of the 56 positions, and a voter that abstains is not scored as wrong. The sample is
+stratified toward contested decisions, so these are not document level accuracies and must not
+be read as such.}
 \label{tab:voters}
 \end{table}
 
@@ -346,8 +348,12 @@ selective classification. \emph{Journal of Machine Learning Research}, 11:1605--
 rates: Recognizer Output Voting Error Reduction (ROVER). In \emph{IEEE Workshop on
 Automatic Speech Recognition and Understanding}, pages 347--354, 1997.
 
+% Two reviewers returned different page ranges for this one (4875--4885 and 4878--4887).
+% Rather than print whichever was asserted more confidently, the range is omitted until it
+% is checked against the proceedings directly. An omitted page range is a gap; a wrong one
+% is an error, and the whole point of this paper is that those are not the same thing.
 \bibitem{geifman2017} Y.~Geifman and R.~El-Yaniv. Selective classification for deep
-neural networks. In \emph{Advances in Neural Information Processing Systems}, 2017.
+neural networks. In \emph{Advances in Neural Information Processing Systems 30}, 2017.
 
 \bibitem{handley1998} J.~C. Handley. Improving OCR accuracy through combination: a
 survey. In \emph{IEEE International Conference on Systems, Man, and Cybernetics}, volume
@@ -363,7 +369,7 @@ Conference on Document Analysis and Recognition}, pages 764--768, 2011.
 
 \bibitem{nartker2005} T.~A. Nartker, S.~V. Rice, and S.~E. Lumos. Software tools and test
 data for research and testing of page-reading OCR systems. In \emph{Document Recognition
-and Retrieval XII}, SPIE, 2005.
+and Retrieval XII}, volume 5676 of \emph{Proceedings of SPIE}, pages 37--47, 2005.
 
 \bibitem{reul2018} C.~Reul, U.~Springmann, C.~Wick, and F.~Puppe. Improving OCR accuracy
 on early printed books by utilizing cross fold training and voting. In \emph{13th IAPR
