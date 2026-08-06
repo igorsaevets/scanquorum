@@ -215,7 +215,31 @@ def main(argv=None):
         }
         print("  #%-4d -> %r" % (n, cands[pick - 1]))
 
-    pathlib.Path(a.out).write_text(json.dumps(out, ensure_ascii=False, indent=1),
+    # 🔴 THE FILE MUST CARRY ITS OWN AUDIT RESULT. Found by an outside reviewer:
+    # this file used to have an identical shape whether the negative controls ran or
+    # not, so an operator who passed --control-rate 0 "to save tokens" produced
+    # something downstream code would treat exactly like an audited result. The audit
+    # belongs INSIDE the artefact, not only in terminal scrollback nobody keeps.
+    rate = (100.0 * ctrl_abstain / ctrl_total) if ctrl_total else None
+    audited = bool(ctrl_total) and rate >= 90
+    doc = {
+        "_audit": {
+            "model": a.model,
+            "controls_run": ctrl_total,
+            "controls_abstained": ctrl_abstain,
+            "abstention_rate_percent": None if rate is None else round(rate, 1),
+            "audited": audited,
+            "verdict": ("controls passed -- the model abstained when given no right answer"
+                        if audited else
+                        "NOT AUDITED -- no negative controls were run in this run"
+                        if not ctrl_total else
+                        "FAILED THE CONTROLS -- this model chose a reading when none was "
+                        "correct; treat every verdict below as a suggestion for a human, "
+                        "not as an answer"),
+        },
+        "verdicts": out,
+    }
+    pathlib.Path(a.out).write_text(json.dumps(doc, ensure_ascii=False, indent=1),
                                    encoding="utf-8", newline="\n")
 
     print("\n=== RESULT ===")

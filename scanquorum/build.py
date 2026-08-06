@@ -263,8 +263,26 @@ def build(pdf, engines=("rapidocr_multi", "rapidocr_en", "tesseract"),
         progress(pi + 1, doc.page_count, "voting")
 
     # ---------------- outputs ------------------------------------------------
-    quorum = sum(v for k, v in stats.items() if k.startswith("VOTE") or k.startswith("SEP")
-                 or k in ("NUM", "LEX", "PATTERN"))
+    # 🔴 A QUORUM OF CORRELATED VOTERS IS NOT A QUORUM. Found by a fourth outside
+    # reviewer, and it is sharper than the console warning fixed earlier: that one
+    # was about what the run PRINTS, this one is about the NUMBER itself. A 2-of-3
+    # majority carried by rapidocr_multi + rapidocr_en is one shared text detector
+    # agreeing with itself, and counting it as two independent confirmations is the
+    # same overstatement the tool exists to catch elsewhere.
+    QUORUM_RULES = ("NUM", "LEX", "PATTERN")
+    quorum = weak = 0
+    for r in ev:
+        rule = r.get("rule", "")
+        if not (rule.startswith("VOTE") or rule.startswith("SEP") or rule in QUORUM_RULES):
+            continue
+        backers = set((r.get("who") or "").split(","))
+        quorum += 1
+        # Weak when every engine that backed it comes from one correlated group and
+        # nothing outside that group agreed.
+        for group in CORRELATED:
+            if backers and backers <= group:
+                weak += 1
+                break
     hdr = {
         "source_pdf": pdf.name,
         "source_sha256": _sha256(pdf),
@@ -275,6 +293,7 @@ def build(pdf, engines=("rapidocr_multi", "rapidocr_en", "tesseract"),
         "frame_engine_pages": frames_used,
         "words": len(ev),
         "accepted_by_quorum": quorum,
+        "quorum_from_correlated_voters_only": weak,
         "unconfirmed": len(unconf),
         "unconfirmed_index": stem + ".unconfirmed.json",
         "existing_layer_producer": meta.get("producer") or "",
@@ -318,6 +337,10 @@ def build(pdf, engines=("rapidocr_multi", "rapidocr_en", "tesseract"),
         print("  %-22s %7d  (%.2f%%)" % (r, n, 100.0 * n / max(len(ev), 1)))
     print("\n  words                : %d" % len(ev))
     print("  accepted by quorum   : %d  (%.2f%%)" % (quorum, 100.0 * quorum / max(len(ev), 1)))
+    if weak:
+        print("    of which carried ONLY by voters that share a detector: %d (%.2f%%)"
+              % (weak, 100.0 * weak / max(quorum, 1)))
+        print("    those are one opinion agreeing with itself -- weaker than the count.")
     print("  shown to you         : %d  (%.2f%%)" % (len(unconf), 100.0 * len(unconf) / max(len(ev), 1)))
     print("\n  -> %s.md" % stem)
     print("  -> %s.unconfirmed.json" % stem)
