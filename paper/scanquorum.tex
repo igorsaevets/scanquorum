@@ -27,22 +27,22 @@ a determinism audit of a multi-engine OCR ensemble}
 \maketitle
 
 \begin{abstract}
-Combining several OCR engines by voting is a thirty year old technique. We report an
-audit of one such system that we believe has not been performed before on any of them.
+Combining several OCR engines by voting is more than thirty years old. We report a
+permutation-order determinism audit of one such system. We have found no prior report of
+this test on an OCR voting ensemble, and we do not claim priority.
 We generated a fixture of 11{,}780 distinct decisions from a running ensemble, replayed
 each one under every permutation of the order in which the engines are supplied, and
 required the set of outcomes to have size one. It did not. On 165 decisions, or 1.40
 percent, the answer depended on which engine the underlying dictionary happened to
 yield first. Twenty nine of those changed a digit. In a corpus of legal citations the
 difference between \texttt{12-869} and \texttt{12369} is the difference between two
-cases. The cause was mundane, and is shared by a great deal of published and unpublished
-ensemble code: \texttt{Counter.most\_common()} and \texttt{max()} resolve a tie by
-returning whichever candidate was inserted first. We describe the four sites, the fix,
-and a fifth site outside the voter that the permutation test could not reach and that an
-external reviewer found instead. We also describe the system the audit was performed on,
-which treats refusal as its primary output rather than as a failure, and we report its
-accuracy along with the two reasons that accuracy is an upper bound rather than an
-estimate. Code, the reference standard and the replay fixture are public.
+cases. The cause was mundane, and can affect any ensemble that uses first-encountered order as an
+unstated tie break: \texttt{Counter.most\_common()} and \texttt{max()} resolve a tie by
+returning whichever candidate was inserted first. We describe the four sites and their fix.
+We also describe a fifth site outside the voter that the permutation test could not reach;
+an external reviewer found it. The audited system treats refusal as an output rather than a
+failure. We report its measured accuracy, and two reasons that number is an upper bound
+rather than an estimate. Code, the reference standard and the replay fixture are public.
 \end{abstract}
 
 \section{Introduction}
@@ -53,21 +53,22 @@ can tell apart from a right one.
 This has become sharper with retrieval augmented generation. A pipeline that runs OCR
 over a scanned filing and hands the result to a language model will reproduce a misread
 docket number with the same fluency, and the same absence of hedging, as a correct one.
-The model has no way to know which tokens were confident and which were guesses, because
-by the time the text reaches it that distinction has been discarded. Recent benchmark
-work has begun to quantify the damage this does to retrieval quality, and finds that low
-character error rates do not protect the downstream task.
+Unless the pipeline propagates confidence, disagreement or refusal, the model receives the
+text as though every token were equally reliable. By the time it arrives, the distinction
+between a corroborated reading and a guess has usually been discarded, and nothing
+downstream can act on a difference it was never told about.
 
 The system described here takes a narrow position on that problem. It does not try to
-read scans more accurately than the best available engine. It tries to make every token
-in its output carry a statement about how it was decided, and it refuses to emit a
-reading where its engines disagree, listing the disagreement instead.
+read scans more accurately than the best available engine. It tries to make every token in
+its output carry a statement about how it was decided. Where its engines disagree it either
+flags the reading or refuses to emit one, and lists the disagreement either way.
 
 That design is not novel and we do not claim it is. Section~\ref{sec:related} sets out
 how much of it is thirty years old. What we do claim is the finding in
 Section~\ref{sec:audit}, and one methodological point: an ensemble whose tie breaks are
-resolved by an unspecified rule is not reproducible, its published numbers cannot be
-recomputed, and nobody appears to check.
+resolved by an unspecified rule is not reproducibly specified. The same inputs can yield
+different outputs when insertion order changes, and none of the OCR ensemble papers we cite
+reports a check for it.
 
 \section{Related work}
 \label{sec:related}
@@ -77,9 +78,9 @@ several speech recognisers into a word transition network and votes over it, opt
 weighting by each recogniser's confidence. The technique moved into document recognition
 quickly. The ISRI toolkit at UNLV \cite{rice1994,nartker2005} shipped \texttt{synctext}
 for alignment and \texttt{vote} for combination, and the documentation of \texttt{vote}
-records that it applies majority voting with heuristics to break ties. The problem in
-Section~\ref{sec:audit} was therefore visible in 1996 to anyone who asked what those
-heuristics were, and we have found no indication that anyone did.
+records that it applies majority voting with heuristics to break ties \cite{nartker2005}.
+The problem in Section~\ref{sec:audit} was therefore visible in that documentation to
+anyone who asked what those heuristics were, and we have found no report that anyone did.
 
 Lund and Ringger \cite{lund2009} align several engines at the character level using an
 admissible A$^{\star}$ heuristic and select from the resulting lattice with a dictionary,
@@ -280,8 +281,8 @@ The first version of the labels was read from a contact sheet whose vertical pad
 caught the neighbouring line. Five of sixty labels were consequently taken from the wrong
 line. They were found by a rule that is now part of the test suite and runs on every
 invocation: if every engine agrees and the human disagrees, suspect the human. We
-recommend it. A reference standard that is never checked against the thing it is
-measuring is a source of confident error in the same way an uncalibrated instrument is.
+recommend it. An unchecked reference standard produces confident
+errors, exactly as an uncalibrated instrument does.
 
 \section{Limitations}
 \label{sec:limits}
@@ -348,12 +349,9 @@ selective classification. \emph{Journal of Machine Learning Research}, 11:1605--
 rates: Recognizer Output Voting Error Reduction (ROVER). In \emph{IEEE Workshop on
 Automatic Speech Recognition and Understanding}, pages 347--354, 1997.
 
-% Two reviewers returned different page ranges for this one (4875--4885 and 4878--4887).
-% Rather than print whichever was asserted more confidently, the range is omitted until it
-% is checked against the proceedings directly. An omitted page range is a gap; a wrong one
-% is an error, and the whole point of this paper is that those are not the same thing.
 \bibitem{geifman2017} Y.~Geifman and R.~El-Yaniv. Selective classification for deep
-neural networks. In \emph{Advances in Neural Information Processing Systems 30}, 2017.
+neural networks. In \emph{Advances in Neural Information Processing Systems 30}, pages
+4878--4887, 2017.
 
 \bibitem{handley1998} J.~C. Handley. Improving OCR accuracy through combination: a
 survey. In \emph{IEEE International Conference on Systems, Man, and Cybernetics}, volume
