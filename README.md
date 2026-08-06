@@ -87,6 +87,12 @@ confidently.
 Accuracy on a stratified sample of 56 hand-checked crops, extrapolated to the document with a
 Horvitz–Thompson estimator: **98.65 % with three engines, 99.15 % with four.**
 
+> 🔴 **Read that as an UPPER BOUND, not as the accuracy.** The reference standard was
+> built by rendering each token's own box and reading it, so when the box itself is
+> wrong the standard is wrong in exactly the same way. Truncation — the largest known
+> residual error class, and 7 of 7 observed mistakes — is invisible to it by
+> construction. Page-level accuracy is necessarily lower and has not been measured.
+
 > 🔴 **And that improvement is not statistically significant.** Exact McNemar on the 4
 > discordant pairs gives **p = 0.125**. Four engines beat three on this document, by a margin
 > this sample cannot distinguish from luck. It is reported because it was measured, not

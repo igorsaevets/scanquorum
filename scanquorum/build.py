@@ -289,7 +289,13 @@ def build(pdf, engines=("rapidocr_multi", "rapidocr_en", "tesseract"),
         "pages": doc.page_count,
         "engines": used,
         "engines_unavailable": [n for n, _ in missing],
-        "frame_engine": max(frames_used, key=frames_used.get) if frames_used else None,
+        # 🔴 THE SAME BUG CLASS, INSIDE THE FIX FOR THE SAME BUG CLASS, ONE COMMIT
+        # LATER. `max(frames_used, key=frames_used.get)` returns whichever key the
+        # dict yielded first when two engines framed an equal number of pages.
+        # Caught by a fifth reviewer. It is only metadata, which is exactly why it
+        # survived: nobody audits the field that merely records what happened.
+        "frame_engine": (max(sorted(frames_used.items()), key=lambda t: t[1])[0]
+                         if frames_used else None),
         "frame_engine_pages": frames_used,
         "words": len(ev),
         "accepted_by_quorum": quorum,
@@ -320,6 +326,14 @@ def build(pdf, engines=("rapidocr_multi", "rapidocr_en", "tesseract"),
     md.append("warning: >")
     md.append("  " + warn)
     md.append("---")
+    md.append("")
+    # A human-readable line in the BODY, not only in the YAML header. A reviewer
+    # pointed out that the header's warning is addressed to an AI reader, and a
+    # person who scrolls past the front matter -- or a RAG chunker that drops it --
+    # sees nothing at all. One line costs nothing and closes that gap.
+    md.append("> **%d of the %d words below are UNVERIFIED.** They are listed in `%s`."
+              % (len(ev) - quorum, len(ev), stem + ".unconfirmed.json"))
+    md.append("> They are not marked inline, so check that index before quoting any passage.")
     md.append("")
     for pi, text in pages_md:
         md.append("<!-- page %d -->" % (pi + 1))
