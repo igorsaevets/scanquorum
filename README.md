@@ -117,6 +117,12 @@ warning: >
 ---
 ```
 
+Note what that header does **not** say: the body text below it is clean, and unconfirmed
+words are **not marked inline**. That is deliberate — inline markers would break the
+byte-for-byte quotation this whole tool exists to make possible — but it means the index is
+not optional. An outside reviewer's first finding on this repository was that an earlier
+version of that header claimed more than was true.
+
 That last field is addressed to the AI that will read the file. It is the cheapest useful
 thing in this project: a model handed a document that states its own uncertainty stops
 presenting guesses as quotations. The body below the header is clean text — greppable,
@@ -134,7 +140,9 @@ pip install pymupdf rapidocr-onnxruntime pillow
 python -m scanquorum build samples/02-matter-of-gaglioti-14-IN-Dec-677.pdf
 ```
 
-No account, no API key, nothing leaves your machine. Tesseract is optional — it is the fourth
+No account and no API key: `build`, the vote engine and both test suites run entirely
+offline. (One optional command, `verify-ai`, does send a crop to a model API — it refuses to
+run without a key, and you never need it. See [SECURITY.md](SECURITY.md).) Tesseract is optional — it is the fourth
 engine, and the tool says so when it runs with three.
 
 **Check that the code here is the code that was measured** — one second, no dependencies:

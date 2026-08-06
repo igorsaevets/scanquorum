@@ -126,9 +126,11 @@ def build(pdf, engines=("rapidocr_multi", "rapidocr_en", "tesseract"),
         if frame is None:
             # No OCR saw this page. Keep the existing layer, mark it unconfirmed.
             for w in words:
-                ev.append({"page": pi, "bbox": [round(x, 1) for x in w[:4]],
-                           "pdf_layer": w[4], "chosen": vote.collapse(w[4]),
-                           "rule": "ONLY_ONE|NO_OCR", "who": "pdf_layer"})
+                rec = {"page": pi, "bbox": [round(x, 1) for x in w[:4]],
+                       "pdf_layer": w[4], "chosen": vote.collapse(w[4]),
+                       "rule": "ONLY_ONE|NO_OCR", "who": "pdf_layer"}
+                ev.append(rec)
+                unconf.append(rec)
                 stats["ONLY_ONE|NO_OCR"] += 1
             pages_md.append((pi, " ".join(w[4] for w in words)))
             progress(pi + 1, doc.page_count, "voting")
@@ -188,7 +190,14 @@ def build(pdf, engines=("rapidocr_multi", "rapidocr_en", "tesseract"),
                 rec = {"page": pi, "bbox": [round(x, 1) for x in box], "col": colf(box),
                        "y": box[1], "x": box[0], "chosen": chosen, "rule": rule, "who": who}
                 rec.update(cands)
-                if rule in ("DISPUTED", "MEDOID_FLAG"):
+                # 🔴 EVERY word not carried by a quorum belongs in the unconfirmed
+                # index -- not only the contested ones. An outside reviewer caught
+                # the header claiming that anything absent from this index had been
+                # read identically by two engines, which was false for every
+                # ONLY_ONE word (~340 per document: running heads, margins, gutters
+                # that layout analysis discards). A machine-readable warning that is
+                # false is worse than no warning, because it is believed.
+                if rule in ("DISPUTED", "MEDOID_FLAG") or rule.startswith("ONLY_ONE"):
                     if chosen is None:
                         rec["chosen"] = vote.collapse(w[4])
                     unconf.append(rec)
@@ -199,10 +208,12 @@ def build(pdf, engines=("rapidocr_multi", "rapidocr_en", "tesseract"),
             if wi in used_w:
                 continue
             box = (w[0], w[1], w[2], w[3])
-            rows.append({"page": pi, "bbox": [round(x, 1) for x in box], "col": colf(box),
-                         "y": box[1], "x": box[0], "pdf_layer": w[4],
-                         "chosen": vote.collapse(w[4]), "rule": "ONLY_ONE|OCR_BLIND",
-                         "who": "pdf_layer"})
+            rec = {"page": pi, "bbox": [round(x, 1) for x in box], "col": colf(box),
+                   "y": box[1], "x": box[0], "pdf_layer": w[4],
+                   "chosen": vote.collapse(w[4]), "rule": "ONLY_ONE|OCR_BLIND",
+                   "who": "pdf_layer"}
+            rows.append(rec)
+            unconf.append(rec)
             stats["ONLY_ONE|OCR_BLIND"] += 1
 
         rows.sort(key=lambda r: (r["col"], round(r["y"], 1), r["x"]))
@@ -227,10 +238,15 @@ def build(pdf, engines=("rapidocr_multi", "rapidocr_en", "tesseract"),
         "generated_by": "scanquorum " + VERSION,
     }
     warn = (
-        "Every word in this file was read identically by at least two independent OCR "
-        "engines, EXCEPT the %d listed in the unconfirmed index. No language model wrote "
-        "or corrected any character here. Where a word is unconfirmed, say so rather than "
-        "quoting it." % len(unconf)
+        "%d of the %d words in this file were read identically by at least two independent "
+        "OCR engines. The other %d were NOT, and every one of them is listed in %s with its "
+        "page and coordinates -- they include words that only a single engine saw as well as "
+        "words the engines could not reconcile. THE BODY TEXT BELOW DOES NOT MARK THEM "
+        "INLINE, so before quoting any passage, check it against that index; if a word from "
+        "it appears in what you are about to quote, say that the word is unverified rather "
+        "than presenting it as the text of the document. No language model wrote or corrected "
+        "any character in this file."
+        % (quorum, len(ev), len(ev) - quorum, stem + ".unconfirmed.json")
     )
     if len(used) < 3:
         warn = ("THIS RUN HAD ONLY %d ENGINES. Nothing here is confirmed by a quorum. "

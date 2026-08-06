@@ -101,6 +101,27 @@ def main():
             print("       -> %s" % " | ".join(repr(o[0]) for o in outs))
         return 1
 
+    # ---- part 3: NO record may be order-dependent under the new code ---------
+    # 🔴 An outside reviewer found the hole: parts 1 and 2 permute only the records
+    # the ORIGINAL was already known to decide by dict order. A NEW ordering
+    # dependence, introduced in a record the original decided stably, would pass
+    # both. That is precisely where the first four sites hid -- in code nobody was
+    # permuting. So permute everything.
+    print("\nPART 3 -- every one of the %d records, under the current code" % len(recs))
+    leaks = []
+    for r in recs:
+        outs = {vote.decide(dict(p), lexicon)
+                for p in itertools.permutations(r["cands"].items())}
+        if len(outs) > 1:
+            leaks.append((r, sorted(outs)))
+    if leaks:
+        print("  🔴 %d records still depend on engine ordering:" % len(leaks))
+        for r, outs in leaks[:10]:
+            print("    %s" % json.dumps(r["cands"], ensure_ascii=False))
+            print("       -> %s" % " | ".join(repr(o[0]) for o in outs))
+        return 1
+    print("  none. The result does not depend on the order the engines are listed in.")
+
     # A test that only ever exercises one branch passes for the wrong reason.
     must = {"ONLY_ONE", "SEP", "NUM", "LEX", "MEDOID_FLAG", "DISPUTED", "PATTERN"}
     missing = must - {r["rule"] for r in recs}
