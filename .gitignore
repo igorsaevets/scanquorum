@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.playwright-mcp/
+*.progress.json
+*.evidence.json
+*.unconfirmed.json
+!samples/expected/*.json
+ai_verdicts.json
+human_verdicts.json
+pending.json
+crops/

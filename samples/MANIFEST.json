@@ -1,0 +1,72 @@
+[
+ {
+  "file": "01-matter-of-arai-13-IN-Dec-494.pdf",
+  "title": "Matter of Arai, 13 I&N Dec. 494 (BIA 1970)",
+  "identifier": "Interim Decision #2027",
+  "primary_source": "https://www.justice.gov/eoir/vll/intdec/vol13/2027.pdf",
+  "sha256": "087d1e7aed5c67dc078727daae3be1269a6b13d2c799fa48d0c536615195fe81",
+  "bytes": 165337,
+  "pages": 3,
+  "text_layer_producer": "Acrobat PDFWriter 4.0 for Windows NT",
+  "text_layer_creator": "PaperPort",
+  "pdf_created": "D:20040414",
+  "matches_official_copy": true,
+  "note": "identical to the official copy, byte for byte"
+ },
+ {
+  "file": "02-matter-of-gaglioti-14-IN-Dec-677.pdf",
+  "title": "Matter of Gaglioti, 14 I&N Dec. 677 (Reg. Comm. 1974)",
+  "identifier": "Interim Decision #2282",
+  "primary_source": "https://www.justice.gov/eoir/vll/intdec/vol14/2282.pdf",
+  "sha256": "12ed016f49855cfce9561ae6214eb7baa395113c778b228c4ea75b3bd306b705",
+  "bytes": 141305,
+  "pages": 2,
+  "text_layer_producer": "Acrobat PDFWriter 4.0 for Windows NT",
+  "text_layer_creator": "Visioneer PaperPort LE",
+  "pdf_created": "D:20000710",
+  "matches_official_copy": true,
+  "note": "identical to the official copy, byte for byte"
+ },
+ {
+  "file": "03-matter-of-vindman-16-IN-Dec-131.pdf",
+  "title": "Matter of Vindman, 16 I&N Dec. 131 (R.C. 1977)",
+  "identifier": "Interim Decision #2563",
+  "primary_source": "https://www.justice.gov/eoir/vll/intdec/vol16/2563.pdf",
+  "sha256": "28801292cc0ca54eecc121ab12fc6004dd10c7bdb207206cd70bfeae6cf115a6",
+  "bytes": 156567,
+  "pages": 3,
+  "text_layer_producer": "Acrobat PDFWriter 4.0 for Windows NT",
+  "text_layer_creator": "Visioneer PaperPort LE",
+  "pdf_created": "D:20000517",
+  "matches_official_copy": true,
+  "note": "identical to the official copy, byte for byte"
+ },
+ {
+  "file": "04-ins-v-bagamasbad-429-US-24.pdf",
+  "title": "INS v. Bagamasbad, 429 U.S. 24 (1976)",
+  "identifier": "U.S. Reports vol. 429",
+  "primary_source": "https://tile.loc.gov/storage-services/service/ll/usrep/usrep429/usrep429024/usrep429024.pdf",
+  "sha256": "f806e040904718e1ce4f60fbc5154def1471390c3f2fb88bf1fd1e2286fc5849",
+  "bytes": 120286,
+  "pages": 4,
+  "text_layer_producer": "Recoded by LuraDocument PDF v2.65",
+  "text_layer_creator": "LuraTech PDF Compressor 7.3.00.47 (original: unknown)",
+  "pdf_created": "D:20090527",
+  "matches_official_copy": true,
+  "note": "identical to the official copy, byte for byte"
+ },
+ {
+  "file": "05-eoir-cumulative-index-vol1-15-AE.pdf",
+  "title": "EOIR Cumulative Topical Index, Vols. 1-15, Topics A-E",
+  "identifier": "41 pages",
+  "primary_source": "https://www.justice.gov/eoir/vll/intdec/chart/Index_vol1_15_ae.pdf",
+  "sha256": "ec421e1f45086fc1422308d4691d84c4469e9df7aafc027a7fb1d60a3f18bb76",
+  "bytes": 5069291,
+  "pages": 41,
+  "text_layer_producer": "Acrobat PDFWriter 4.0 for Windows NT",
+  "text_layer_creator": "",
+  "pdf_created": "D:20021106",
+  "matches_official_copy": true,
+  "note": "identical to the official copy, byte for byte"
+ }
+]
