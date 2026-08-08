@@ -19,3 +19,8 @@ paper/*.log
 paper/*.out
 paper/*.xdv
 paper/*.synctex.gz
+
+# packaging artefacts
+/dist/
+/build/
+*.egg-info/

@@ -1,0 +1,87 @@
+# Packaging for PyPI.
+#
+# WHY THE DEPENDENCY VERSIONS HERE DO NOT MATCH requirements.txt, ON PURPOSE.
+#
+# `requirements.txt` pins with `==` because this project publishes accuracy figures and those
+# figures are a property of specific model weights. That is the right call for a *reproducible
+# environment* and the wrong call for a *distributed library*: a `==` pin inside package metadata
+# propagates into every environment that installs this alongside anything else, and the first
+# other package that wants a different numpy version makes `pip install scanquorum` unsolvable.
+#
+# So the two files answer two different questions and both answers are kept:
+#
+#   dependencies             -> what the code needs in order to run at all (ranges)
+#   optional "measured"      -> the exact environment the README numbers were measured in
+#   requirements.txt         -> unchanged, still the reproducible install for contributors
+#
+# `pip install scanquorum[measured]` reproduces the published figures. A bare
+# `pip install scanquorum` gets a working tool and makes no accuracy claim.
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scanquorum"
+dynamic = ["version"]
+description = "Read a scanned page with several independent OCR engines and accept a word only when they agree. No language model in the transcription path."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Igor Saevets" }]
+keywords = ["ocr", "pdf", "scanned-documents", "rag", "consensus", "hallucination", "document-ai"]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Legal Industry",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering :: Image Recognition",
+    "Topic :: Text Processing",
+    "Topic :: Utilities",
+]
+
+# Ranges, not pins. See the note at the top of this file.
+#
+# The upper bounds are not decoration: RapidOCR selects its weights by enum, and a major bump is
+# free to change what those enums resolve to. A major-version ceiling is the weakest bound that
+# still stops a silent weight swap. onnxruntime and numpy get ceilings for ABI reasons, not
+# accuracy ones.
+dependencies = [
+    "pymupdf>=1.24,<2",
+    "rapidocr>=3.9,<4",
+    "onnxruntime>=1.17,<2",
+    "numpy>=1.24,<3",
+    "pillow>=10,<13",
+]
+
+[project.optional-dependencies]
+# The exact set the README's numbers were measured with on 2026-08-06, Python 3.14.6, Windows 11.
+# Quote a figure from the README only from an environment installed this way.
+measured = [
+    "pymupdf==1.28.0",
+    "rapidocr==3.9.2",
+    "onnxruntime==1.28.0",
+    "numpy==2.4.6",
+    "pillow==12.3.0",
+]
+
+[project.scripts]
+scanquorum = "scanquorum.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/igorsaevets/scanquorum"
+Source = "https://github.com/igorsaevets/scanquorum"
+Issues = "https://github.com/igorsaevets/scanquorum/issues"
+Changelog = "https://github.com/igorsaevets/scanquorum/blob/main/CHANGELOG.md"
+
+[tool.setuptools.dynamic]
+version = { attr = "scanquorum.__version__" }
+
+[tool.setuptools.packages.find]
+include = ["scanquorum", "scanquorum.*"]
