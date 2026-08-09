@@ -1,7 +1,8 @@
 # The paper
 
-`scanquorum.tex` is a six page preprint about the determinism audit in
-[`testing/TESTED.md`](../testing/TESTED.md). `scanquorum.pdf` is the compiled output.
+`scanquorum.tex` is an eight page preprint about the determinism audit in
+[`testing/TESTED.md`](../testing/TESTED.md), with the round-4 risk-coverage measurement folded
+in as Section 5.4. `scanquorum.pdf` is the compiled output.
 
 ## Building it
 
@@ -51,14 +52,19 @@ rule; it is written to be accurate and brief rather than apologetic.
 These are the experiments reviewers asked for, in the order they would improve it most. They are
 tracked in [`testing/TO-TEST.md`](../testing/TO-TEST.md).
 
-1. ~~A risk-coverage curve rather than one operating point.~~ **Measured 2026-08-09** —
-   `tests/test_riskcov.py` recomputes it from a shipped fixture; `testing/TESTED.md` round 4
-   has the honest caveats. Not yet folded into the paper's text.
+1. ~~A risk-coverage curve rather than one operating point.~~ **Measured 2026-08-09 and
+   folded into the paper the same day** (Section 5.4, Table 2) after a nine-channel review
+   of the measurement itself; `tests/test_riskcov.py` recomputes every point from a shipped
+   fixture and `testing/TESTED.md` round 4 carries the caveats.
 2. ~~A single-engine confidence baseline thresholded to the same coverage.~~ **Measured
-   2026-08-09**, same place. The ensemble sits above the single-engine curve at all fourteen
-   matched coverage points (point estimates; most per-point intervals overlap). Not yet in
-   the paper's text.
-3. A second corpus in a different genre.
+   2026-08-09**, same place, two baselines: RapidOCR's line-level confidence (paired
+   difference excludes zero at all fourteen policies) and Tesseract's word-level confidence
+   (indistinguishable at the coverage it can reach, which tops out near 83 %).
+   A risk-coverage *figure* is deliberately deferred: the curves are nearly flat and the
+   table carries them; a figure would add a package dependency for little information.
+3. A second corpus in a different genre. After round 4 this is the top item: the same 56
+   crops have now served as development set and test set, and only fresh crops drawn after
+   the code froze can price that reuse.
 4. A downstream experiment: does a model given the sidecar actually fabricate fewer citations
    than one given raw OCR? That is the motivating claim and it is untested.
 5. A comparison against OCR-D's alignment and voting component, which is the obvious external

@@ -102,10 +102,17 @@ preferring the second, which is a measurement rather than an argument.
 considerably better developed than our use of it. Chow \cite{chow1957,chow1970}
 formulated the reject option and derived the optimal threshold from the relative cost of
 an error and a rejection. Modern selective prediction \cite{elyaniv2010,geifman2017}
-reports a risk coverage curve rather than a single operating point. We report a single
-operating point. We have no calibrated confidence to threshold, and the acceptance rule
-is fixed rather than tunable, so a curve is not currently available to us. This is a
-limitation and Section~\ref{sec:limits} treats it as one.
+reports a risk coverage curve rather than a single operating point. We now measure that
+curve too (Section~\ref{sec:riskcov}); what we still lack is calibrated confidence, so
+the curve is swept over the discrete acceptance rules rather than a continuous
+threshold. Recent work scores OCR output by inter-model agreement entropy over several
+vision language models \cite{zhang2025consensus}, and risk-controlled selective OCR has
+been built around single vision language models \cite{geomrisk2026}. Both share our
+premise that agreement or abstention carries information; neither votes across
+independent classical engines, and the first selects a best output where we refuse. We
+found no prior risk coverage measurement of a multi-engine OCR voting ensemble (nine
+reviewing channels searched independently, 2026-08-09); that is a statement about what
+the searches returned, not a claim of absence.
 
 \paragraph{Ensembles as working software.} OCR-D's alignment step performs n-ary
 alignment with majority or confidence voting as an operational component of a document
@@ -284,6 +291,67 @@ invocation: if every engine agrees and the human disagrees, suspect the human. W
 recommend it. An unchecked reference standard produces confident
 errors, exactly as an uncalibrated instrument does.
 
+\subsection{The curve, not one point}
+\label{sec:riskcov}
+
+Both measurements the first round of outside review ranked first are now in the
+repository and recomputable by a stranger (\texttt{tests/test\_riskcov.py}): the risk
+coverage curve over acceptance policies, and a single engine thresholded on its own
+confidence to the same coverage. Coverage is a census and is exact; accuracy among
+accepted tokens is a H\'ajek ratio over the 56 gold crops with post-stratification
+weights by the rebuilt three-voice stratum. The draw-time inclusion probabilities no
+longer exist -- the strata moved under the sample when two pipeline defects were fixed
+-- so these are descriptive estimates under the shipped voter, not design-unbiased
+inference from the original draw, and the same 56 crops served earlier rounds as a
+development set, an adaptive reuse only a fresh sample on a second document can price.
+
+\begin{table}[t]
+\centering
+\caption{Accepted-token accuracy against coverage: four of the fourteen measured
+policies and the two single-engine baselines this stack can produce. Coverage is exact;
+accuracy is a H\'ajek ratio over 56 stratified crops. The paired interval is the
+bootstrap CI of the per-resample difference against the RapidOCR baseline, matched at
+nearest coverage; marginal per-point intervals overlap everywhere.}
+\label{tab:riskcov}
+\footnotesize
+\begin{tabular}{lrrl}
+\toprule
+policy & coverage & accuracy & honest uncertainty \\
+\midrule
+unanimity only & 77.3\,\% & 100\,\% & 0/7 errors; unweighted Wilson floor 64.6\,\% \\
+VOTE$\geq$3, separators folded & 95.3\,\% & 99.4\,\% & CI [98.1, 100]; paired $\Delta$ [+0.6, +4.6] \\
+full cascade & 97.6\,\% & 99.4\,\% & CI [98.2, 100]; paired $\Delta$ [+0.6, +4.6] \\
+everything emitted & 98.9\,\% & 99.3\,\% & CI [97.9, 100]; Manski [97.7, 99.3] \\
+\midrule
+RapidOCR, line conf.\ $\tau{=}0.925$ & 98.4\,\% & 97.1\,\% & CI [94.7, 99.0] \\
+Tesseract, word conf.\ $\tau{=}0.85$ & 80.6\,\% & 99.2\,\% & 20/21 crops; collapses below $\tau{=}0.8$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Three facts carry Table~\ref{tab:riskcov}. Measured accuracy does not collapse as
+coverage rises: the later rules of the cascade add about fourteen points of coverage
+while the point estimates move by less than 0.2 points, and the sample cannot
+distinguish those policies from one another. The RapidOCR baseline is weak in an
+instructive way: its confidence is line-level, every word inherits its line's score, so
+thresholding barely sorts word errors (95.9\,\% accurate at 99\,\% coverage, 97.4\,\% at
+14\,\%); against it the paired per-resample difference excludes zero at all fourteen
+policies, in both matching directions. The fair challenger is Tesseract, whose
+confidence is per word: at the coverages it can reach -- at most 83\,\% before its
+accuracy collapses -- this sample cannot separate it from the ensemble. The measured
+advantage of the ensemble over any single engine in this stack is therefore not accuracy
+at low coverage; it is that no single engine's confidence delivers 95--99\,\% coverage
+at comparable accuracy, and that is the coverage regime where a quotation tool operates.
+
+The bounds, stated rather than implied. The four crops whose frame is unusable stay
+excluded by the convention of Section~\ref{sec:limits}; counted as errors they cost the
+full-coverage point half a percentage point and the unanimity point nothing. Removing
+the lexicon entirely moves the headline accuracies by at most 0.01 and costs 0.3 points
+of coverage, so the curve does not rest on it. Two strata hold a single crop and
+contribute zero bootstrap variance; 560 accepted tokens (1.9\,\%) lie in strata with no
+crop at all and enter only as Manski bands. The entire observed error set behind the
+table is two crops, and both are printed in the repository's testing log.
+
 \section{Limitations}
 \label{sec:limits}
 
@@ -292,11 +360,15 @@ We list these in the order we would attack them.
 One document, one genre, one language, one scanning lineage from 2002. Nothing here shows
 that any number transfers.
 
-A single operating point rather than a risk coverage curve. The selective prediction
-literature reports a curve, and the appropriate comparison for our acceptance rule is a
-single engine's own confidence thresholded to the same coverage. We have not run it. If
-the ensemble does not dominate that curve, the premise of the system is weaker than we
-have argued.
+The risk coverage curve of Section~\ref{sec:riskcov} is measured over discrete
+policies, not a continuous threshold, and its accuracy axis rests on 56 crops with two
+strata behind a single crop each. The single-engine comparison is honest but asymmetric
+in both directions at once: RapidOCR's line-level confidence understates what a
+well-calibrated single engine could do, and Tesseract's word-level confidence cannot
+reach the coverage where the comparison matters. A single engine with calibrated
+word-level confidence at high coverage does not exist in this stack; testing against one
+elsewhere is an open task, and if such an engine dominated the curve, the premise of the
+system would be weaker than we have argued.
 
 No decision level reference standard. The 56 labelled positions measure whether the
 chosen string matches the page. They do not measure, per rule, how often a rule that
@@ -353,6 +425,9 @@ Automatic Speech Recognition and Understanding}, pages 347--354, 1997.
 neural networks. In \emph{Advances in Neural Information Processing Systems 30}, pages
 4878--4887, 2017.
 
+\bibitem{geomrisk2026} W.~Gong, Z.~Lu, M.~Chen, Y.~Zuo, X.~He, and W.~Fan. Geometric
+risk control for vision-language model OCR. arXiv:2603.19790, 2026.
+
 \bibitem{handley1998} J.~C. Handley. Improving OCR accuracy through combination: a
 survey. In \emph{IEEE International Conference on Systems, Man, and Cybernetics}, volume
 5, pages 4330--4333, 1998.
@@ -380,6 +455,10 @@ Artificial Intelligence}, 8(5):1259--1268, 1994.
 \bibitem{wick2018} C.~Wick, C.~Reul, and F.~Puppe. Calamari: a high-performance
 Tensorflow-based deep learning package for optical character recognition.
 arXiv:1807.02004, 2018.
+
+\bibitem{zhang2025consensus} Y.~Zhang, T.~Liang, X.~Huang, E.~Cui, G.~Wang, X.~Guo,
+C.~Li, and G.~Liu. Consensus entropy: harnessing multi-VLM agreement for self-verifying
+and self-improving OCR. arXiv:2504.11101, 2025.
 
 \end{thebibliography}
 

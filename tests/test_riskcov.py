@@ -13,6 +13,13 @@
 # aggregate cross-tabulations of the 41-page EOIR index evidence plus the 56 scored
 # gold crops -- no lab files, no OCR engine, no network.
 #
+# WHAT THIS TEST PROVES, AND WHAT IT CANNOT (round-3 reviewer point, kept verbatim
+# because it is right): the expected values below were transcribed from the same run
+# that produced the fixture, so parts 1-2 prove the shipped fixture and the published
+# numbers are one consistent object -- they do NOT independently verify the estimator.
+# A wrong estimator would pass here forever. The estimator's own audit lives in
+# testing/TESTED.md round 4, where three external channels attacked it.
+#
 # WHAT THE ESTIMATOR IS, in one paragraph, so nobody has to reverse-engineer it:
 # coverage is EXACT (a census of which tokens each policy accepts); accuracy among
 # accepted tokens is a Hájek ratio -- Horvitz-Thompson totals for "correct and
@@ -157,7 +164,7 @@ def main():
         bins[b] += c
     for tau, ecov, eacc in E2_EXPECT:
         cov = sum(c for b, c in bins.items()
-                  if b != "none" and float(b) >= tau - 1e-12) / TOTAL
+                  if b not in ("none", "<0") and float(b) >= tau - 1e-12) / TOTAL
         acc = hajek("multi_ok", lambda r: r["conf_mu"] is not None and r["conf_mu"] >= tau)
         ok = abs(cov - ecov) < 5e-7 and abs(acc - eacc) < 1e-6
         print("  tau %-7s cov %7.2f%%  acc %7.2f%%  %s"
@@ -169,23 +176,36 @@ def main():
     assert grid == sorted(grid)
 
     # ---- 3. the comparative claim, which is the one that matters ------------
-    print("\nPART 3 -- at every policy's coverage, the ensemble vs the single engine")
+    # Round 3 correction: v1.0 of this part matched the baseline only at coverage
+    # >= the policy's, which forces extra low-confidence tokens on it and flatters
+    # the ensemble. Both directions are now checked. The statistical form of the
+    # claim -- the PAIRED per-resample difference, which excludes zero at every
+    # point in both directions -- lives in testing/riskcov_results.json and
+    # TESTED.md round 4; this part checks only the point estimates.
+    print("\nPART 3 -- at every policy's coverage, the ensemble vs the single engine,")
+    print("          baseline matched at nearest coverage above AND below")
     e2pts = sorted(((c, a) for _, c, a in E2_EXPECT))
     below = 0
     for label, _ in POLICIES:
         cov, acc = E1_EXPECT[label]
-        cand = [(c, a) for c, a in e2pts if c >= cov - 1e-9]
-        mcov, macc = min(cand) if cand else max(e2pts)
-        if acc <= macc:
-            below += 1
-            print("  %-36s ensemble %6.2f%% <= single %6.2f%%" % (label, 100 * acc, 100 * macc))
+        for tag, cand in (("above", [(c, a) for c, a in e2pts if c >= cov - 1e-9]),
+                          ("below", [(c, a) for c, a in e2pts if c <= cov + 1e-9])):
+            if not cand:
+                continue
+            mcov, macc = min(cand) if tag == "above" else max(cand)
+            if acc <= macc:
+                below += 1
+                print("  %-36s ensemble %6.2f%% <= single %6.2f%% (matched %s)"
+                      % (label, 100 * acc, 100 * macc, tag))
     if below:
-        fails.append("the ensemble fails to beat the single-engine baseline at %d point(s)" % below)
+        fails.append("the ensemble fails to beat the single-engine baseline at %d "
+                     "direction-matched point(s)" % below)
     else:
-        print("  the ensemble is above the single-engine curve at all %d matched points."
+        print("  point estimates: the ensemble is above the single-engine curve at all")
+        print("  %d policies, matched in both directions. Marginal per-point intervals"
               % len(POLICIES))
-        print("  (point estimates; most per-point intervals overlap -- see TESTED.md before")
-        print("   quoting this as significant)")
+        print("  overlap; the PAIRED difference excludes zero everywhere -- TESTED.md")
+        print("  round 4 states both, with the caveats.")
 
     print()
     if fails:

@@ -1,5 +1,11 @@
 {
- "what": "per-token cross-tabulations of the 41-page EOIR index evidence, so the risk-coverage curve and the confidence baseline are recomputable from public data; built by riskcov.py v1.1, seed 20260809",
+ "what": "per-token cross-tabulations of the 41-page EOIR index evidence, so the risk-coverage curve and the confidence baseline are recomputable from public data; built by riskcov.py v1.2, seed 20260809",
+ "provenance": {
+  "document": "samples/05-eoir-cumulative-index-vol1-15-AE.pdf",
+  "frame_engine": "the PDF's own text layer (recorded as 'adobe'; producer Acrobat PDFWriter 4.0, see samples/MANIFEST.json)",
+  "voter": "scanquorum.vote v1.0, replayed over the recorded candidate sets",
+  "note": "coverage depends on the frame engine's tokenisation; a different frame or detector version changes token_total and every coverage figure without touching accuracy (round-3 reviewer point)"
+ },
  "token_total": 29853,
  "shipped_rule_census": {
   "VOTE4/4": 23085,

@@ -8,10 +8,18 @@ No change to the voter; the parity fixture still replays byte for byte.
 - **The risk-coverage curve** (`tests/test_riskcov.py`, fixture
   `tests/fixtures/index_census.json`): accepted-token accuracy against coverage for
   fourteen acceptance policies, from unanimity-only (77.3 % coverage, 0 errors in 7 gold
-  crops, Wilson floor 64.6 %) to everything-emitted (98.9 % coverage, estimated 99.3 %).
+  crops, unweighted Wilson floor 64.6 %) to everything-emitted (98.9 % coverage, estimated
+  99.3 %, Manski band [97.7, 99.3]).
 - **The single-engine confidence baseline**: `rapidocr_multi` alone, thresholded on its own
-  line confidence, stays near 96–98 % at every coverage; the ensemble sits above it at all
-  fourteen matched coverage points. Point estimates; most per-point intervals overlap.
+  line-level confidence, spans 95.9–98.7 % across coverages and barely sorts its own errors.
+  The ensemble's point estimate is above it at all fourteen policies matched in both
+  directions, and the paired per-resample difference excludes zero at every point; the fair
+  word-level challenger (Tesseract) is indistinguishable at the ≤ 83 % coverage it can reach
+  and cannot go higher. Round-3 corrections folded in same day: the never-sampled mass is
+  560 tokens (1.9 %), not 597; the original head-to-head matched only upward, which flattered
+  the ensemble. "No change to the voter" below means no change between 0.2.0 and 0.2.1; the
+  34 divergences the replay reports are recorded lab evidence vs shipped code, documented
+  since 0.2.0.
 - The measuring script's **first version was itself wrong** — it divided an estimated
   numerator by an exact denominator and printed accuracies above 140 %. Recorded in
   `testing/TESTED.md` round 4 with the fix (a Hájek ratio), because a rejected instrument

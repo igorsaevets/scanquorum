@@ -151,14 +151,27 @@ accepted-token accuracy against coverage, and threshold the best single engine o
 confidence to the same coverage. `python tests/test_riskcov.py` recomputes every point from a
 shipped fixture of cross-tabulations; no engine, no network.
 
-Three cells of that table earn their space here. Accepting only full unanimity keeps 77.3 %
-of the document with zero errors observed in its gold crops — which is 0 in 7, a Wilson floor
-of 64.6 %, and must not be read as "100 %". The default cascade reaches 98.9 % coverage at an
-estimated 99.3 % accepted-token accuracy. And the best single engine, thresholded on its own
-line confidence, stays near 96–98 % at *every* coverage — its confidence barely sorts its own
-errors (95.9 % accurate at 99 % coverage, 97.4 % at 14 %), so at every matched coverage point
-the ensemble sits above it. Point estimates from 56 crops; most per-point intervals overlap;
-`testing/TESTED.md` round 4 states exactly what is and is not significant here.
+Three cells of that table earn their space here. Accepting only full unanimity (the
+`VOTE4/4 only` policy) keeps 77.3 % of the document with zero errors observed in its gold
+crops — which is 0 in 7, an unweighted Wilson floor of 64.6 %, and must not be read as
+"100 %". The default cascade reaches 98.9 % coverage at an estimated 99.3 % accepted-token
+accuracy on the sampled strata (Manski band [97.7, 99.3] once the 1.9 % of tokens in
+never-sampled strata are allowed to be anything). And `rapidocr_multi`, thresholded on its
+own confidence — which is line-level, so every word inherits its line's score — barely sorts
+its own errors: 95.9 % accurate at 99 % coverage, 97.4 % at 14 %. Separately, the ensemble's
+point estimate is above that baseline at all fourteen policies, matched at nearest coverage
+in both directions, and the **paired** per-resample difference excludes zero at every point —
+while the fair word-level challenger, Tesseract's per-word confidence, is statistically
+indistinguishable from the ensemble at the coverages it can reach (≤ 83 %) and cannot reach
+the 95–99 % coverage where a quotation tool operates.
+
+The same three warnings that wrap the headline number above wrap this table too: the curve is
+an upper bound (the reference standard cannot see a wrong frame — and unanimity is exactly
+where frame errors hide; counted as errors, the four known ones cost the full-coverage point
+half a percentage point and the unanimity point nothing), it is one document, and its
+accuracy axis rests on 56 crops re-used across rounds. `testing/TESTED.md` round 4 carries
+every number in this paragraph with its interval, sensitivity, and the two crops that are the
+entire observed error set.
 
 Everything above is reproducible from this repository: `samples/` contains all five documents,
 `testing/` records what was tried and what was rejected.

@@ -16,8 +16,10 @@
 # The cascade is ordered by how much evidence each rule requires, most first.
 # A rule only runs when every rule above it has declined.
 #
-# PARITY: tests/test_vote_parity.py replays 29,853 real decisions recorded from
-# the measured run and asserts this file reproduces every one of them. If you
+# PARITY: tests/test_vote_parity.py replays the 11,780 DISTINCT candidate sets
+# recorded from the measured run (they cover all 29,853 decisions; the fixture was
+# recorded by importing the ORIGINAL lab module, not this file, so the replay is
+# not circular) and asserts this file reproduces every order-independent one. If you
 # change anything here and that test still passes, you changed nothing that
 # matters; if it fails, you changed the measured behaviour and the numbers in
 # README.md no longer describe this code.

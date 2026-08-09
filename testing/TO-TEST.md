@@ -79,3 +79,36 @@ entirely untested.
 No figure exists for pages per minute, memory, or how it degrades on a laptop without a
 GPU. Anyone deciding whether to run this on 10,000 documents currently has nothing to go
 on.
+
+---
+
+Added after round 4's nine-channel review (2026-08-09), in the order reviewers weighted them:
+
+## G10 — Fresh gold crops on a second document, drawn after the code froze
+The sharpest round-4 finding: the same 56 crops found the tie-break bugs, tuned the
+cascade, and now score the curve — a development set scoring itself. Every round-4 number
+carries adaptive-reuse optimism nobody can price from inside. Fifty fresh crops on one new
+document would do more for credibility than any estimator refinement. Subsumes G1's
+motivation and inherits its method.
+
+## G11 — AURC as the one-number ensemble-vs-baseline summary
+Fourteen dependent per-point comparisons invite misquotation; the selective-prediction
+literature's area-under-the-risk-coverage-curve is one number with one CI. Needs an
+interpolation convention between discrete policies — state it before computing.
+
+## G12 — A reject-cost model, so the curve becomes a decision
+Chow's threshold needs the relative cost of a rejection and an error. Even a toy model
+(review at 3 seconds per token vs a wrong citation at some named cost) turns the
+coverage/accuracy trade into a recommendation instead of a table.
+
+## G13 — Page-cluster bootstrap and CER-weighted risk
+Two variance refinements reviewers asked for: crops share pages (56 crops on 30 pages,
+max 4 per page), so within-page correlation understates CIs; and binary token equality
+scores `12-869` vs `12—869` the same as total garbage — a character-error-weighted curve
+would separate formatting loss from semantic loss.
+
+## G14 — A single engine with calibrated word-level confidence at high coverage
+The one comparison round 4 could not run: nothing in this stack offers per-word
+calibrated confidence above ~83 % coverage. Kraken, PaddleOCR's det+rec pipelines, or a
+recalibrated Tesseract might. If such an engine dominates the ensemble's curve, the
+premise falls; the paper says so.
