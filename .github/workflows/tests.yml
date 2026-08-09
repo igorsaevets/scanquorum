@@ -31,7 +31,7 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
-      # These three read fixtures and nothing else. If they need a package, that is
+      # These four read fixtures and nothing else. If they need a package, that is
       # itself a defect: a stranger must be able to check the published numbers
       # without installing an OCR stack.
       - name: parity of the published code with the measured code
@@ -40,6 +40,8 @@ jobs:
         run: python tests/test_safety.py
       - name: the accuracy figures recompute from the shipped gold set
         run: python tests/test_goldset.py
+      - name: the risk-coverage curve and single-engine baseline recompute
+        run: python tests/test_riskcov.py
 
   doctor:
     name: doctor reports a degraded quorum honestly

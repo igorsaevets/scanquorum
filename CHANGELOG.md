@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.2.1 - 2026-08-09
+
+The two measurements every reviewer of the paper asked for, now shipped and recomputable.
+No change to the voter; the parity fixture still replays byte for byte.
+
+- **The risk-coverage curve** (`tests/test_riskcov.py`, fixture
+  `tests/fixtures/index_census.json`): accepted-token accuracy against coverage for
+  fourteen acceptance policies, from unanimity-only (77.3 % coverage, 0 errors in 7 gold
+  crops, Wilson floor 64.6 %) to everything-emitted (98.9 % coverage, estimated 99.3 %).
+- **The single-engine confidence baseline**: `rapidocr_multi` alone, thresholded on its own
+  line confidence, stays near 96–98 % at every coverage; the ensemble sits above it at all
+  fourteen matched coverage points. Point estimates; most per-point intervals overlap.
+- The measuring script's **first version was itself wrong** — it divided an estimated
+  numerator by an exact denominator and printed accuracies above 140 %. Recorded in
+  `testing/TESTED.md` round 4 with the fix (a Hájek ratio), because a rejected instrument
+  that vanishes is an instrument someone rebuilds.
+- Replaying all 29,853 recorded decisions through the shipped voter (not just the 11,780
+  distinct sets) found the recorded evidence and the shipped code disagree on 34 rules —
+  the 33 tie-policy moves plus name translation — and on two gold crops (#27, #38) where
+  the shipped code now refuses instead of guessing; #27's guess was wrong, #38's was right.
+
 ## 0.2.0 - 2026-08-06
 
 A second round of outside review, this time by six independent models with live web search.

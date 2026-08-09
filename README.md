@@ -143,6 +143,23 @@ with three engines and 99.15 % with four**. Read the two warnings below before u
 > this sample cannot distinguish from luck. It is reported because it was measured, not
 > because it is proven.
 
+### The curve, not one point
+
+Every reviewer of the accompanying paper asked for the same two measurements, so both are now
+in the repository and recomputable by a stranger: vary the acceptance rule and plot
+accepted-token accuracy against coverage, and threshold the best single engine on its own
+confidence to the same coverage. `python tests/test_riskcov.py` recomputes every point from a
+shipped fixture of cross-tabulations; no engine, no network.
+
+Three cells of that table earn their space here. Accepting only full unanimity keeps 77.3 %
+of the document with zero errors observed in its gold crops — which is 0 in 7, a Wilson floor
+of 64.6 %, and must not be read as "100 %". The default cascade reaches 98.9 % coverage at an
+estimated 99.3 % accepted-token accuracy. And the best single engine, thresholded on its own
+line confidence, stays near 96–98 % at *every* coverage — its confidence barely sorts its own
+errors (95.9 % accurate at 99 % coverage, 97.4 % at 14 %), so at every matched coverage point
+the ensemble sits above it. Point estimates from 56 crops; most per-point intervals overlap;
+`testing/TESTED.md` round 4 states exactly what is and is not significant here.
+
 Everything above is reproducible from this repository: `samples/` contains all five documents,
 `testing/` records what was tried and what was rejected.
 
@@ -324,8 +341,9 @@ survey (*IEEE SMC* 1998) had already laid out the taxonomy.
 **Abstention is older still, and better formalised elsewhere.** Chow (1957, and *IEEE Trans.
 Inf. Theory* 1970) is the reject option, with an optimal threshold derived from a cost model.
 Modern selective prediction (El-Yaniv and Wiener, *JMLR* 2010; Geifman and El-Yaniv, *NeurIPS*
-2017) reports a **risk-coverage curve**. We report one point on that curve and we have no
-calibrated confidence at all. Conformal prediction would give distribution-free coverage
+2017) reports a **risk-coverage curve**. As of round 4 we report that curve too
+(`python tests/test_riskcov.py`); what we still lack is calibrated confidence.
+Conformal prediction would give distribution-free coverage
 guarantees for the set of readings we already produce; we do not currently make that claim.
 
 **Voting inside one engine is a live alternative.** Calamari (Wick, Reul and Puppe, 2018) votes

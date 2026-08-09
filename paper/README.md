@@ -51,12 +51,13 @@ rule; it is written to be accurate and brief rather than apologetic.
 These are the experiments reviewers asked for, in the order they would improve it most. They are
 tracked in [`testing/TO-TEST.md`](../testing/TO-TEST.md).
 
-1. A risk-coverage curve rather than one operating point. Vary the acceptance rule and plot
-   accuracy against coverage. Cheap: the labelling burden is on the refused tokens, which are
-   about 2 % of the corpus.
-2. A single-engine confidence baseline thresholded to the same coverage. Costs no annotation at
-   all, since the confidence scores already exist. If the ensemble does not beat that curve, the
-   premise is weaker than the paper argues.
+1. ~~A risk-coverage curve rather than one operating point.~~ **Measured 2026-08-09** —
+   `tests/test_riskcov.py` recomputes it from a shipped fixture; `testing/TESTED.md` round 4
+   has the honest caveats. Not yet folded into the paper's text.
+2. ~~A single-engine confidence baseline thresholded to the same coverage.~~ **Measured
+   2026-08-09**, same place. The ensemble sits above the single-engine curve at all fourteen
+   matched coverage points (point estimates; most per-point intervals overlap). Not yet in
+   the paper's text.
 3. A second corpus in a different genre.
 4. A downstream experiment: does a model given the sidecar actually fabricate fewer citations
    than one given raw OCR? That is the motivating claim and it is untested.

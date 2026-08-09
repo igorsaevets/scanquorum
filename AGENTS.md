@@ -32,7 +32,7 @@ Tesseract is missing and what it costs them.
 Then confirm the tests pass. They need no network, no key and no OCR engine:
 
 ```bash
-python tests/test_vote_parity.py && python tests/test_safety.py && python tests/test_doctor.py
+python tests/test_vote_parity.py && python tests/test_safety.py && python tests/test_goldset.py && python tests/test_riskcov.py && python tests/test_doctor.py
 ```
 
 ## Five things that will mislead you if you do not know them

@@ -187,3 +187,59 @@ The narrow claim that survived: **no reviewer found prior work that tests an OCR
 breaks for determinism under permutation of engine order.** Three of the six documented their
 search terms; the other three asserted it without showing their work, and one had no search
 tools at all. So the claim rests on three documented negatives, and it is stated that way.
+
+---
+
+## Round 4 (2026-08-09): the two experiments every reviewer ranked first
+
+Measured by `riskcov.py` v1.1 (lab), replayed publicly by `tests/test_riskcov.py` from
+`tests/fixtures/index_census.json`. Design: every one of the 29,853 recorded candidate sets is
+re-decided by the shipped `vote.decide`; coverage per policy is a census, exact; accuracy among
+accepted tokens is a Hajek ratio over the 56 gold crops with post-stratification weights
+N_h/n_h by three-voice stratum, per the convention `ht_estimate.py` set for the published
+99.15 %. The machinery reproduces that 99.15 % from recorded choices before anything new is
+computed.
+
+### T12 — the risk-coverage curve: the cascade's extra coverage costs ~0.7 points
+
+| policy | coverage | acc (Hajek) | honest uncertainty |
+|---|---:|---:|---|
+| unanimity only (VOTE4/4) | 77.3 % | 100 % | **0 errors in 7 crops; Wilson floor 64.6 %** |
+| VOTE>=3 +SEP/NUM | 95.3 % | 99.4 % | CI [98.1, 100] |
+| VOTE>=2 +SEP/NUM +LEX/PATTERN | 97.6 % | 99.4 % | CI [98.2, 100] |
+| everything emitted (+flags) | 98.9 % | 99.3 % | CI [97.9, 100]; Manski [97.7, 99.3] |
+
+Accuracy is remarkably flat from VOTE>=3 outward: the cascade's later rules add ~14 points of
+coverage while the measured accuracy moves less than 0.2 points. The sample cannot distinguish
+the policies from each other (CIs overlap heavily); what it does support is that no policy on
+the grid collapses. Strata with one crop (NUM, МЕДОИД-ФЛАГ) contribute zero bootstrap
+variance, so CIs are understated wherever they carry weight; 597 tokens (2.0 %) sit in strata
+with no gold crop at all and enter only the Manski bands.
+
+### T13 — the single-engine baseline: its confidence barely sorts its errors
+
+`rapidocr_multi` alone, thresholded on its own line-level confidence (words inherit their
+line's score; 26 of 27 same-line neighbour pairs share it): accuracy stays in a narrow band —
+95.9 % at 99 % coverage, 97.1 % at 91 %, 97.4 % at 14 % coverage. Throwing away five sixths of
+the document buys about 1.5 points. **At every one of the 14 matched-coverage points the
+ensemble sits above the single-engine curve.** Point estimates; most per-point intervals
+overlap, so this is a consistent pattern, not 14 independent significant wins — but it answers
+the reviewer's question ("if the ensemble does not dominate this curve, the premise collapses")
+in the direction the premise needed.
+
+### T14 — the full-corpus replay caught what the distinct-set parity replay could not
+
+Replaying all 29,853 records (not the 11,780 distinct sets) against the recorded evidence:
+34 rule differences — the 33 tie-policy moves recorded in T8 plus translation — and two gold
+crops where the shipped code refuses where the lab code guessed: **#27** (guess was wrong;
+refusing is strictly better) and **#38** (guess was right; refusing costs one correct token).
+The safety trade has a measured price now, and it is one token in 56.
+
+### R7 — REJECTED: the first version of the measuring script itself
+
+`riskcov.py` v1.0 divided an HT-estimated numerator by the exact accepted count and printed
+accuracies of 143 % — the dominant stratum has 23,585 tokens behind 8 crops, and which crops
+fall inside a policy is sampling noise worth ~2,948 tokens each; against an exact denominator
+it does not cancel. Fixed by the Hajek ratio (numerator and denominator from the same sample).
+Kept as `riskcov_v1.0.py` in the lab tree. Sixth broken instrument across these sessions, and
+the second one caught by its own output being impossible.

@@ -128,8 +128,14 @@ No network, no API key, no OCR engine needed. These are pure replay:
 ```bash
 python tests/test_vote_parity.py
 python tests/test_safety.py
+python tests/test_goldset.py
+python tests/test_riskcov.py
 python tests/test_doctor.py
 ```
+
+`test_goldset.py` recomputes the published accuracy table from the shipped 60-crop gold set,
+and `test_riskcov.py` recomputes the full risk-coverage curve and the single-engine
+confidence baseline from a shipped fixture of cross-tabulations.
 
 `test_vote_parity.py` replays 11,780 real decisions recorded from the implementation the
 published numbers were measured with, and requires this code to reproduce every one that the

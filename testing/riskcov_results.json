@@ -1,0 +1,678 @@
+{
+ "version": "1.1",
+ "seed": 20260809,
+ "bootstrap": 4000,
+ "replay_diff_rule": 34,
+ "replay_diff_chosen_core": 322,
+ "machinery_check_recorded_HT": 0.9914826067661215,
+ "E1": [
+  {
+   "policy": "VOTE4/4 only",
+   "coverage": 0.7732891166716913,
+   "accepted": 23085,
+   "accepted_covered": 23085,
+   "gold_crops_accepted": 7,
+   "gold_crops_correct": 7,
+   "accuracy_hajek": 1.0,
+   "ci": [
+    1.0,
+    1.0
+   ],
+   "wilson_floor_on_zero_errors": 0.6456611570247934,
+   "accuracy_v10_exactden_diagnostic": 0.89395170023825,
+   "unmeasured_accepted": 0,
+   "manski": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "policy": "VOTE4/4 only +SEP/NUM",
+   "coverage": 0.8797440793220112,
+   "accepted": 26263,
+   "accepted_covered": 26252,
+   "gold_crops_accepted": 28,
+   "gold_crops_correct": 28,
+   "accuracy_hajek": 1.0,
+   "ci": [
+    1.0,
+    1.0
+   ],
+   "wilson_floor_on_zero_errors": 0.8793527963418923,
+   "accuracy_v10_exactden_diagnostic": 0.9065293437960282,
+   "unmeasured_accepted": 11,
+   "manski": [
+    0.999581159806572,
+    1.0
+   ]
+  },
+  {
+   "policy": "VOTE4/4 only +LEX/PATTERN",
+   "coverage": 0.7770743308880179,
+   "accepted": 23198,
+   "accepted_covered": 23149,
+   "gold_crops_accepted": 12,
+   "gold_crops_correct": 12,
+   "accuracy_hajek": 1.0,
+   "ci": [
+    1.0,
+    1.0
+   ],
+   "wilson_floor_on_zero_errors": 0.7574992425007574,
+   "accuracy_v10_exactden_diagnostic": 0.895768835706846,
+   "unmeasured_accepted": 49,
+   "manski": [
+    0.9978877489438744,
+    1.0
+   ]
+  },
+  {
+   "policy": "VOTE4/4 only +SEP/NUM +LEX/PATTERN",
+   "coverage": 0.8835292935383379,
+   "accepted": 26376,
+   "accepted_covered": 26316,
+   "gold_crops_accepted": 33,
+   "gold_crops_correct": 33,
+   "accuracy_hajek": 1.0,
+   "ci": [
+    1.0,
+    1.0
+   ],
+   "wilson_floor_on_zero_errors": 0.8957265699643882,
+   "accuracy_v10_exactden_diagnostic": 0.9080972074445626,
+   "unmeasured_accepted": 60,
+   "manski": [
+    0.9977252047315741,
+    1.0
+   ]
+  },
+  {
+   "policy": "VOTE>=3",
+   "coverage": 0.846414095735772,
+   "accepted": 25268,
+   "accepted_covered": 25248,
+   "gold_crops_accepted": 18,
+   "gold_crops_correct": 17,
+   "accuracy_hajek": 0.9930130143289075,
+   "ci": [
+    0.9790390429867227,
+    1.0
+   ],
+   "wilson_floor_on_zero_errors": null,
+   "accuracy_v10_exactden_diagnostic": 0.9972869138149556,
+   "unmeasured_accepted": 20,
+   "manski": [
+    0.9922270296729562,
+    0.9930185446325889
+   ]
+  },
+  {
+   "policy": "VOTE>=3 +SEP/NUM",
+   "coverage": 0.9528690583860918,
+   "accepted": 28446,
+   "accepted_covered": 28415,
+   "gold_crops_accepted": 39,
+   "gold_crops_correct": 38,
+   "accuracy_hajek": 0.9937875493840147,
+   "ci": [
+    0.9813152559850944,
+    1.0
+   ],
+   "wilson_floor_on_zero_errors": null,
+   "accuracy_v10_exactden_diagnostic": 0.9973898762390756,
+   "unmeasured_accepted": 31,
+   "manski": [
+    0.9927045354618146,
+    0.9937943196142437
+   ]
+  },
+  {
+   "policy": "VOTE>=3 +LEX/PATTERN",
+   "coverage": 0.8501993099520986,
+   "accepted": 25381,
+   "accepted_covered": 25312,
+   "gold_crops_accepted": 23,
+   "gold_crops_correct": 22,
+   "accuracy_hajek": 0.9930402634617105,
+   "ci": [
+    0.9790780979373327,
+    1.0
+   ],
+   "wilson_floor_on_zero_errors": null,
+   "accuracy_v10_exactden_diagnostic": 0.998687491220677,
+   "unmeasured_accepted": 69,
+   "manski": [
+    0.9903406149774562,
+    0.9930591839857695
+   ]
+  },
+  {
+   "policy": "VOTE>=3 +SEP/NUM +LEX/PATTERN",
+   "coverage": 0.9566542726024185,
+   "accepted": 28559,
+   "accepted_covered": 28479,
+   "gold_crops_accepted": 44,
+   "gold_crops_correct": 43,
+   "accuracy_hajek": 0.993809101339323,
+   "ci": [
+    0.9813772322210672,
+    1.0
+   ],
+   "wilson_floor_on_zero_errors": null,
+   "accuracy_v10_exactden_diagnostic": 0.9986344714038804,
+   "unmeasured_accepted": 80,
+   "manski": [
+    0.9910252248693084,
+    0.9938264433993691
+   ]
+  },
+  {
+   "policy": "VOTE>=2",
+   "coverage": 0.8657756339396375,
+   "accepted": 25846,
+   "accepted_covered": 25791,
+   "gold_crops_accepted": 27,
+   "gold_crops_correct": 26,
+   "accuracy_hajek": 0.993128517621506,
+   "ci": [
+    0.9793312636511526,
+    1.0
+   ],
+   "wilson_floor_on_zero_errors": null,
+   "accuracy_v10_exactden_diagnostic": 0.9928161848017611,
+   "unmeasured_accepted": 55,
+   "manski": [
+    0.9910151512023626,
+    0.993143140059439
+   ]
+  },
+  {
+   "policy": "VOTE>=2 +SEP/NUM",
+   "coverage": 0.9722305965899575,
+   "accepted": 29024,
+   "accepted_covered": 28958,
+   "gold_crops_accepted": 48,
+   "gold_crops_correct": 47,
+   "accuracy_hajek": 0.9938790317008191,
+   "ci": [
+    0.9815839674451822,
+    1.0
+   ],
+   "wilson_floor_on_zero_errors": null,
+   "accuracy_v10_exactden_diagnostic": 0.9934061591116636,
+   "unmeasured_accepted": 66,
+   "manski": [
+    0.9916189705069018,
+    0.9938929506612569
+   ]
+  },
+  {
+   "policy": "VOTE>=2 +LEX/PATTERN",
+   "coverage": 0.8695608481559642,
+   "accepted": 25959,
+   "accepted_covered": 25855,
+   "gold_crops_accepted": 32,
+   "gold_crops_correct": 31,
+   "accuracy_hajek": 0.9931548749782668,
+   "ci": [
+    0.979407073531406,
+    1.0
+   ],
+   "wilson_floor_on_zero_errors": null,
+   "accuracy_v10_exactden_diagnostic": 0.9941984142332237,
+   "unmeasured_accepted": 104,
+   "manski": [
+    0.9891759810687271,
+    0.9931822987234904
+   ]
+  },
+  {
+   "policy": "VOTE>=2 +SEP/NUM +LEX/PATTERN",
+   "coverage": 0.9760158108062841,
+   "accepted": 29137,
+   "accepted_covered": 29022,
+   "gold_crops_accepted": 53,
+   "gold_crops_correct": 52,
+   "accuracy_hajek": 0.9938999546657026,
+   "ci": [
+    0.9816541734022908,
+    1.0
+   ],
+   "wilson_floor_on_zero_errors": null,
+   "accuracy_v10_exactden_diagnostic": 0.9946362529575264,
+   "unmeasured_accepted": 115,
+   "manski": [
+    0.9899771590866603,
+    0.9939240307618499
+   ]
+  },
+  {
+   "policy": "all present agree (VOTEk/k)",
+   "coverage": 0.7754999497537935,
+   "accepted": 23151,
+   "accepted_covered": 23110,
+   "gold_crops_accepted": 7,
+   "gold_crops_correct": 7,
+   "accuracy_hajek": 1.0,
+   "ci": [
+    1.0,
+    1.0
+   ],
+   "wilson_floor_on_zero_errors": 0.6456611570247934,
+   "accuracy_v10_exactden_diagnostic": 0.8929846386845521,
+   "unmeasured_accepted": 41,
+   "manski": [
+    0.9982290181849596,
+    1.0
+   ]
+  },
+  {
+   "policy": "everything emitted (+flags)",
+   "coverage": 0.9893143067698389,
+   "accepted": 29534,
+   "accepted_covered": 29079,
+   "gold_crops_accepted": 54,
+   "gold_crops_correct": 52,
+   "accuracy_hajek": 0.9926638315432317,
+   "ci": [
+    0.9793864290672403,
+    1.0
+   ],
+   "wilson_floor_on_zero_errors": null,
+   "accuracy_v10_exactden_diagnostic": 0.9926865894058713,
+   "unmeasured_accepted": 455,
+   "manski": [
+    0.977370879577627,
+    0.9927768523547652
+   ]
+  }
+ ],
+ "E2": [
+  {
+   "tau": 0.0,
+   "coverage": 0.989883763775835,
+   "accepted": 29551,
+   "gold_crops_accepted": 56,
+   "accuracy_hajek": 0.958991559965926,
+   "ci": [
+    0.9312817085214659,
+    0.9817305613400245
+   ],
+   "unmeasured_accepted": 264
+  },
+  {
+   "tau": 0.5,
+   "coverage": 0.989883763775835,
+   "accepted": 29551,
+   "gold_crops_accepted": 56,
+   "accuracy_hajek": 0.958991559965926,
+   "ci": [
+    0.9312817085214659,
+    0.9817305613400245
+   ],
+   "unmeasured_accepted": 264
+  },
+  {
+   "tau": 0.7,
+   "coverage": 0.989247311827957,
+   "accepted": 29532,
+   "gold_crops_accepted": 55,
+   "accuracy_hajek": 0.9601770446590325,
+   "ci": [
+    0.9326718994123131,
+    0.9834222714276966
+   ],
+   "unmeasured_accepted": 254
+  },
+  {
+   "tau": 0.8,
+   "coverage": 0.9888788396476066,
+   "accepted": 29521,
+   "gold_crops_accepted": 55,
+   "accuracy_hajek": 0.9601770446590325,
+   "ci": [
+    0.9326718994123131,
+    0.9834222714276966
+   ],
+   "unmeasured_accepted": 249
+  },
+  {
+   "tau": 0.85,
+   "coverage": 0.9887783472347837,
+   "accepted": 29518,
+   "gold_crops_accepted": 55,
+   "accuracy_hajek": 0.9601770446590325,
+   "ci": [
+    0.9326718994123131,
+    0.9834222714276966
+   ],
+   "unmeasured_accepted": 248
+  },
+  {
+   "tau": 0.9,
+   "coverage": 0.9877399256356145,
+   "accepted": 29487,
+   "gold_crops_accepted": 55,
+   "accuracy_hajek": 0.9601770446590325,
+   "ci": [
+    0.9326718994123131,
+    0.9834222714276966
+   ],
+   "unmeasured_accepted": 248
+  },
+  {
+   "tau": 0.925,
+   "coverage": 0.9836197367098785,
+   "accepted": 29364,
+   "gold_crops_accepted": 52,
+   "accuracy_hajek": 0.970804238750747,
+   "ci": [
+    0.9470503684755466,
+    0.9896966140863578
+   ],
+   "unmeasured_accepted": 239
+  },
+  {
+   "tau": 0.95,
+   "coverage": 0.9687803570830402,
+   "accepted": 28921,
+   "gold_crops_accepted": 48,
+   "accuracy_hajek": 0.9701135103563036,
+   "ci": [
+    0.9459238299585132,
+    0.9895187933384507
+   ],
+   "unmeasured_accepted": 226
+  },
+  {
+   "tau": 0.96,
+   "coverage": 0.9519981241416273,
+   "accepted": 28420,
+   "gold_crops_accepted": 47,
+   "accuracy_hajek": 0.9699396151038424,
+   "ci": [
+    0.9456050643845896,
+    0.9895187933384507
+   ],
+   "unmeasured_accepted": 216
+  },
+  {
+   "tau": 0.97,
+   "coverage": 0.9124711084313134,
+   "accepted": 27240,
+   "gold_crops_accepted": 44,
+   "accuracy_hajek": 0.9701241504135433,
+   "ci": [
+    0.9455763952549185,
+    0.9899474324526535
+   ],
+   "unmeasured_accepted": 190
+  },
+  {
+   "tau": 0.975,
+   "coverage": 0.869694838039728,
+   "accepted": 25963,
+   "gold_crops_accepted": 40,
+   "accuracy_hajek": 0.9729121333284289,
+   "ci": [
+    0.9451274550573145,
+    0.9934482286646061
+   ],
+   "unmeasured_accepted": 155
+  },
+  {
+   "tau": 0.98,
+   "coverage": 0.8081599839212139,
+   "accepted": 24126,
+   "gold_crops_accepted": 34,
+   "accuracy_hajek": 0.9722109134679644,
+   "ci": [
+    0.9434286541065507,
+    0.9933315606897525
+   ],
+   "unmeasured_accepted": 126
+  },
+  {
+   "tau": 0.985,
+   "coverage": 0.7101798814189528,
+   "accepted": 21201,
+   "gold_crops_accepted": 29,
+   "accuracy_hajek": 0.9713749412381983,
+   "ci": [
+    0.9416626743328006,
+    0.9931210500539961
+   ],
+   "unmeasured_accepted": 99
+  },
+  {
+   "tau": 0.99,
+   "coverage": 0.5647003651224333,
+   "accepted": 16858,
+   "gold_crops_accepted": 28,
+   "accuracy_hajek": 0.9728973813859709,
+   "ci": [
+    0.9436107197063238,
+    0.9946136115069295
+   ],
+   "unmeasured_accepted": 63
+  },
+  {
+   "tau": 0.9925,
+   "coverage": 0.4679596690449871,
+   "accepted": 13970,
+   "gold_crops_accepted": 20,
+   "accuracy_hajek": 0.9783771832956066,
+   "ci": [
+    0.9435794350977954,
+    0.9981116432711089
+   ],
+   "unmeasured_accepted": 57
+  },
+  {
+   "tau": 0.995,
+   "coverage": 0.3704820286068402,
+   "accepted": 11060,
+   "gold_crops_accepted": 11,
+   "accuracy_hajek": 0.9868821781218172,
+   "ci": [
+    0.9369773330582802,
+    1.0
+   ],
+   "unmeasured_accepted": 41
+  },
+  {
+   "tau": 0.9975,
+   "coverage": 0.27565068837302786,
+   "accepted": 8229,
+   "gold_crops_accepted": 8,
+   "accuracy_hajek": 0.9824289811522051,
+   "ci": [
+    0.8680851745287802,
+    1.0
+   ],
+   "unmeasured_accepted": 33
+  },
+  {
+   "tau": 0.999,
+   "coverage": 0.18969617793856564,
+   "accepted": 5663,
+   "gold_crops_accepted": 6,
+   "accuracy_hajek": 0.974147749133388,
+   "ci": [
+    0.2966045946766522,
+    1.0
+   ],
+   "unmeasured_accepted": 17
+  },
+  {
+   "tau": 0.9995,
+   "coverage": 0.14300070344688975,
+   "accepted": 4269,
+   "gold_crops_accepted": 5,
+   "accuracy_hajek": 0.9739947472214318,
+   "ci": [
+    0.12707234363225323,
+    1.0
+   ],
+   "unmeasured_accepted": 14
+  }
+ ],
+ "head_to_head": [
+  {
+   "policy": "VOTE4/4 only",
+   "coverage": 0.7732891166716913,
+   "ens": 1.0,
+   "multi": 0.9722109134679644,
+   "multi_tau": 0.98,
+   "multi_cov": 0.8081599839212139,
+   "verdict": "ensemble",
+   "cis_overlap": true
+  },
+  {
+   "policy": "VOTE4/4 only +SEP/NUM",
+   "coverage": 0.8797440793220112,
+   "ens": 1.0,
+   "multi": 0.9701241504135433,
+   "multi_tau": 0.97,
+   "multi_cov": 0.9124711084313134,
+   "verdict": "ensemble",
+   "cis_overlap": true
+  },
+  {
+   "policy": "VOTE4/4 only +LEX/PATTERN",
+   "coverage": 0.7770743308880179,
+   "ens": 1.0,
+   "multi": 0.9722109134679644,
+   "multi_tau": 0.98,
+   "multi_cov": 0.8081599839212139,
+   "verdict": "ensemble",
+   "cis_overlap": true
+  },
+  {
+   "policy": "VOTE4/4 only +SEP/NUM +LEX/PATTERN",
+   "coverage": 0.8835292935383379,
+   "ens": 1.0,
+   "multi": 0.9701241504135433,
+   "multi_tau": 0.97,
+   "multi_cov": 0.9124711084313134,
+   "verdict": "ensemble",
+   "cis_overlap": true
+  },
+  {
+   "policy": "VOTE>=3",
+   "coverage": 0.846414095735772,
+   "ens": 0.9930130143289075,
+   "multi": 0.9729121333284289,
+   "multi_tau": 0.975,
+   "multi_cov": 0.869694838039728,
+   "verdict": "ensemble",
+   "cis_overlap": true
+  },
+  {
+   "policy": "VOTE>=3 +SEP/NUM",
+   "coverage": 0.9528690583860918,
+   "ens": 0.9937875493840147,
+   "multi": 0.9701135103563036,
+   "multi_tau": 0.95,
+   "multi_cov": 0.9687803570830402,
+   "verdict": "ensemble",
+   "cis_overlap": true
+  },
+  {
+   "policy": "VOTE>=3 +LEX/PATTERN",
+   "coverage": 0.8501993099520986,
+   "ens": 0.9930402634617105,
+   "multi": 0.9729121333284289,
+   "multi_tau": 0.975,
+   "multi_cov": 0.869694838039728,
+   "verdict": "ensemble",
+   "cis_overlap": true
+  },
+  {
+   "policy": "VOTE>=3 +SEP/NUM +LEX/PATTERN",
+   "coverage": 0.9566542726024185,
+   "ens": 0.993809101339323,
+   "multi": 0.9701135103563036,
+   "multi_tau": 0.95,
+   "multi_cov": 0.9687803570830402,
+   "verdict": "ensemble",
+   "cis_overlap": true
+  },
+  {
+   "policy": "VOTE>=2",
+   "coverage": 0.8657756339396375,
+   "ens": 0.993128517621506,
+   "multi": 0.9729121333284289,
+   "multi_tau": 0.975,
+   "multi_cov": 0.869694838039728,
+   "verdict": "ensemble",
+   "cis_overlap": true
+  },
+  {
+   "policy": "VOTE>=2 +SEP/NUM",
+   "coverage": 0.9722305965899575,
+   "ens": 0.9938790317008191,
+   "multi": 0.970804238750747,
+   "multi_tau": 0.925,
+   "multi_cov": 0.9836197367098785,
+   "verdict": "ensemble",
+   "cis_overlap": true
+  },
+  {
+   "policy": "VOTE>=2 +LEX/PATTERN",
+   "coverage": 0.8695608481559642,
+   "ens": 0.9931548749782668,
+   "multi": 0.9729121333284289,
+   "multi_tau": 0.975,
+   "multi_cov": 0.869694838039728,
+   "verdict": "ensemble",
+   "cis_overlap": true
+  },
+  {
+   "policy": "VOTE>=2 +SEP/NUM +LEX/PATTERN",
+   "coverage": 0.9760158108062841,
+   "ens": 0.9938999546657026,
+   "multi": 0.970804238750747,
+   "multi_tau": 0.925,
+   "multi_cov": 0.9836197367098785,
+   "verdict": "ensemble",
+   "cis_overlap": true
+  },
+  {
+   "policy": "all present agree (VOTEk/k)",
+   "coverage": 0.7754999497537935,
+   "ens": 1.0,
+   "multi": 0.9722109134679644,
+   "multi_tau": 0.98,
+   "multi_cov": 0.8081599839212139,
+   "verdict": "ensemble",
+   "cis_overlap": true
+  },
+  {
+   "policy": "everything emitted (+flags)",
+   "coverage": 0.9893143067698389,
+   "ens": 0.9926638315432317,
+   "multi": 0.958991559965926,
+   "multi_tau": 0.0,
+   "multi_cov": 0.989883763775835,
+   "verdict": "ensemble",
+   "cis_overlap": true
+  }
+ ],
+ "moved_gold_crops": [
+  {
+   "n": 27,
+   "rule": "DISPUTED",
+   "chosen_rec": "7-667",
+   "chosen_replay": null,
+   "truth": "7—657"
+  },
+  {
+   "n": 38,
+   "rule": "DISPUTED",
+   "chosen_rec": "ence",
+   "chosen_replay": null,
+   "truth": "ence"
+  }
+ ]
+}
