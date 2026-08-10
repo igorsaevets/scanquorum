@@ -256,6 +256,11 @@ the two RapidOCR voters share a detector.
 **If you are handing this to an AI coding agent,** point it at [AGENTS.md](AGENTS.md). It is
 written to be executed and it lists the five things that will otherwise mislead it.
 
+**How this was built:** substantial AI assistance (Anthropic's Claude) wrote code and prose
+throughout, under human direction and review — the commit trailers say so on every commit, and
+the paper's final section reports it as arXiv policy requires. Every published number is
+recomputed from shipped fixtures by the test suites regardless of who typed the code.
+
 No account and no API key: `build`, the vote engine and both test suites run entirely
 offline. (One optional command, `verify-ai`, does send a crop to a model API — it refuses to
 run without a key, and you never need it. See [SECURITY.md](SECURITY.md).) Tesseract is optional — it is the fourth
