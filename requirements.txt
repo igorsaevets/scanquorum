@@ -19,7 +19,7 @@
 # and the quorum means much less than the engine count suggests. `doctor` exits 1
 # and says so rather than letting that pass quietly.
 
-pymupdf==1.28.0
+pymupdf==1.28.2
 rapidocr==3.9.2
 onnxruntime==1.28.0
 numpy==2.4.6
