@@ -76,3 +76,9 @@ jobs:
           name: dist
           path: dist/
       - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          # PEP 740 attestations. Requires id-token: write (already set on this job).
+          # The uploaded sdist + wheel carry a Sigstore-signed attestation binding the
+          # artifact bytes to this exact workflow run, so anyone can verify the release
+          # was cut by this repo, without needing us to have a long-lived PyPI token.
+          attestations: true

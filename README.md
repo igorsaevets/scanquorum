@@ -237,10 +237,19 @@ a page.
 ## Install
 
 ```bash
+pip install scanquorum              # working tool
+pip install scanquorum[measured]    # exact pins used for every published number
+scanquorum doctor                   # <- run this before anything else
+scanquorum build samples/02-matter-of-gaglioti-14-IN-Dec-677.pdf
+```
+
+From a checkout instead, if you want to hack on it:
+
+```bash
 git clone https://github.com/igorsaevets/scanquorum
 cd scanquorum
 python -m pip install -r requirements.txt
-python -m scanquorum doctor        # <- run this before anything else
+python -m scanquorum doctor
 python -m scanquorum build samples/02-matter-of-gaglioti-14-IN-Dec-677.pdf
 ```
 
