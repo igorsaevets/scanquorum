@@ -1,5 +1,91 @@
 # Changelog
 
+## 0.2.2 - 2026-08-17
+
+A silent-failure bug found while using this tool on a corpus it was not built
+for: PDFs with NO existing text layer.
+
+`build.py` was anchored to the PDF's own words as landmarks -- the whole
+voting loop iterates over `pg.get_text("words")`. On a pure scan that list is
+empty, `layout.assign(frame, [])` returns an empty owner map, every `for bi in
+order` iteration then reads `owner.get(bi, []) == []` and emits nothing. The
+fallback "words the frame did not cover" loop iterates the same empty list a
+second time. The .md file comes back with a valid YAML header, a warning that
+says "0 unconfirmed" (technically true and materially false: the unconfirmed
+count only exists relative to what was emitted, and nothing was), and an
+empty body. Every OCR engine has already run to completion and its boxes are
+thrown away.
+
+Found on Igor Saevets' I-485 exhibit corpus on 2026-08-17. Five of five
+pilot SCAN documents (`EAD.pdf`, `SSN.pdf`, `SEVIS Records.pdf`, `B-01
+Passport.pdf`, `Donation screenshot.pdf`) came back with 0 emitted rows from
+the OCR half of the pipeline. Three of the five still emitted 10-19 rows,
+but only because a `Exhibit D-02 - SEVIS Records` stamp had been added to
+the PDF layer by the packaging tool -- so the "OCR output" was that one stamp
+line read three times, not the document read once. If the stamps had not
+been there, the count would have been zero for all five.
+
+The consequence is exactly the failure mode this project exists to catch: a
+report that says nothing needed a person's attention while producing an
+artifact that was invisibly hollow. The bug is at build.py:150-268 in the
+pre-fix code and had never fired in the paper's corpus because every EOIR
+document there had a text layer.
+
+### Fixed
+
+- **New pure-scan emission path** in build.py (`_emit_pure_scan_page`). Runs
+  when `pg.get_text("words") == []` and at least one engine produced boxes for
+  the page. Voting is line-to-line rather than word-to-word (there is nothing
+  in the PDF to anchor to), using the same `vote.decide` cascade the word path
+  uses -- so LEX still refuses Capitalised tokens, PATTERN still requires
+  digit-match from at least one other engine, and MEDOID still flags rather
+  than accepts. IoU threshold 0.30, matching the workaround pilot
+  (`ocr_pilot_v2.py`) that first characterised the bug on real files.
+- Every rule tag on this path is suffixed with `|NO_LAYER`. `classify()`
+  splits on `|` and reads the base, so the four accounting buckets are
+  unaffected; the suffix exists so a reviewer scanning `evidence.json` can
+  tell at a glance which rows came from OCR only.
+- **New header field `pure_scan_pages`** with the count of pages that fell
+  into this path. A run's header is where a downstream reader looks first,
+  and the count being zero versus non-zero changes what "line granularity"
+  means for the rest of the numbers on this page.
+- **Header warning** prepends a "NOTE: N of M pages had no existing text
+  layer" clause when the count is non-zero. Explains the coarser SEP/NUM
+  behaviour so nobody has to reverse-engineer the difference.
+
+### Tested
+
+- `tests/test_purescan.py` builds a minimal pure-scan PDF fixture from a PIL
+  render (no text layer at all, verified inline), runs `build()`, and asserts
+  the .md body is non-empty and `pure_scan_pages` is at least 1. It also
+  asserts that at least two rendered tokens survive round-trip through OCR,
+  as a coarse sanity check that the emitted body reflects the image content.
+  Skips if PIL / rapidocr / onnxruntime are missing, matching the doctor
+  suite's philosophy that missing-engine paths must fail explicitly rather
+  than silently.
+- `test_vote_parity.py`, `test_goldset.py`, `test_riskcov.py`,
+  `test_safety.py`, `test_doctor.py` -- unchanged, unaffected. This is a new
+  code path, not a change to any rule.
+- Smoke run on the original 5 pilot documents: rows emitted per file rose
+  from `0-19` to `16-69`, matching what the pilot's workaround already
+  produced. See the OCR report at
+  `07-Исследования-и-рецензии/OCR-exhibits-2026-08-17/OCR-EXHIBITS-НАХОДКИ.md`
+  (private repository) for the per-file counts.
+
+### Not fixed
+
+- On a pure-scan page the pipeline still emits at LINE granularity. That is
+  not a workaround; it is a consequence of having no per-word anchors. A
+  future release could add per-word bounding boxes from an engine that
+  reports them (Tesseract does) and vote per-word inside each line, but that
+  is a design change, not a bug fix, and the coarser SEP/NUM behaviour is
+  reported honestly here rather than hidden.
+- The mixed case -- a page with a partial text layer, e.g. the stamped SEVIS
+  document above -- still runs the word-anchored path and misses whatever is
+  in the image but not in the layer. This is a separate problem (MIXED, not
+  SCAN, in the classifier) and would need a different fix: emitting from both
+  paths on the same page and reconciling their overlap. Scoped as a follow-up.
+
 ## 0.2.1 - 2026-08-09
 
 The two measurements every reviewer of the paper asked for, now shipped and recomputable.

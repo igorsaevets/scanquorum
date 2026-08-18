@@ -33,7 +33,27 @@ from . import __version__
 # Module version, bumped when this file's behaviour changes. Distinct from the
 # package version above on purpose: the sidecar header records both, so a reader
 # who finds an odd number can tell whether the pipeline or the packaging moved.
-VERSION = "1.1"
+VERSION = "1.2"
+
+# When the PDF has no text layer at all (`pg.get_text("words") == []`), the
+# word-anchored voting path below has nothing to iterate: `owner` is empty,
+# every `for bi in order` loop does zero work, and the .md file comes back
+# with a valid YAML header and an empty body while every OCR engine sits on
+# a full page of boxes it has already read. Found on Igor's I-485 exhibit
+# corpus on 2026-08-17: 5 of 5 pilot pure-scan documents emitted 0 rows,
+# and 3 of them still emitted 10-19 rows -- but only because a stamp had been
+# ADDED to the PDF layer by the packaging tool, so the "OCR output" was the
+# stamp read three times, not the document read once. See CHANGELOG.md 0.2.2.
+#
+# The fix is a separate emission path (see `_emit_pure_scan_page` below) that
+# runs when `words == []` AND at least one engine produced boxes. Voting is
+# LINE-to-LINE rather than word-to-word, because there are no per-word anchors
+# in the PDF to line up against. The IoU threshold below matches the one the
+# workaround pilot (ocr_pilot_v2.py) settled on empirically: 0.30 lets slightly
+# tilted engines agree without letting neighbouring lines masquerade as the
+# same one. Tests in tests/test_purescan.py assert both that the .md is
+# non-empty and that the header's `pure_scan_pages` counter incremented.
+PURE_SCAN_IOU_THR = 0.30
 
 # Which engine's line boxes define the page's layout, in order of preference.
 # STATED, not alphabetical -- see the note at the frame selection below. The
@@ -67,6 +87,78 @@ def load_engines(names, pdf, dpi, progress):
         except Exception as e:
             missing.append((n, repr(e)[:120]))
     return out, missing
+
+
+def _emit_pure_scan_page(pi, frame, frame_engine, ocr, granularity, lex):
+    """Line-level records for a page whose PDF has no text layer.
+
+    The word-anchored path in `build()` iterates over `pg.get_text("words")`. On a
+    pure scan that list is empty, and the whole voting loop does zero work: an .md
+    file is written with a valid YAML header and an empty body while every engine's
+    boxes are silently discarded. This function replaces that empty output.
+
+    Voting is LINE-to-LINE because the pipeline has no per-word anchors on this
+    page. For every line box the frame engine drew, the other engines' readings
+    are collected by IoU (for line-granularity engines) or by aggregating words
+    whose centres fall inside the frame box (for word engines like tesseract).
+    The same `vote.decide` cascade then runs on the candidate map, exactly as in
+    the word path -- so LEX still cannot promote a Capitalised token, PATTERN
+    still requires digit-match from at least one other engine, and MEDOID still
+    flags rather than accepts. Every rule tag is suffixed with "|NO_LAYER" so a
+    downstream reader can tell this row was decided without a PDF anchor.
+
+    Returns (rows, per_rule_counter). The rows have the same shape as the word
+    path's records so the outer pipeline's `classify` / bucket accounting and
+    the unconfirmed-index writer work unchanged.
+    """
+    import collections
+    rows, stats = [], collections.Counter()
+    for fb in sorted(frame, key=lambda b: (round(b["b"][1], 1), b["b"][0])):
+        fb_box = fb["b"]
+        cands = {frame_engine: fb["t"]}
+        x0, y0, x1, y1 = fb_box
+        for n in sorted(ocr):
+            if n == frame_engine:
+                continue
+            boxes = ocr[n].get(str(pi), {}).get("boxes", [])
+            if not boxes:
+                continue
+            if granularity.get(n) == "word":
+                inside = []
+                for wb in boxes:
+                    wb_box = wb["b"]
+                    cx, cy = (wb_box[0] + wb_box[2]) / 2, (wb_box[1] + wb_box[3]) / 2
+                    if x0 <= cx <= x1 and y0 <= cy <= y1:
+                        inside.append((wb_box[0], wb["t"]))
+                if inside:
+                    cands[n] = " ".join(t for _, t in sorted(inside))
+            else:
+                best_iou, best_t = 0.0, None
+                for ob in boxes:
+                    v = layout.iou(fb_box, ob["b"])
+                    if v > best_iou:
+                        best_iou, best_t = v, ob["t"]
+                if best_iou >= PURE_SCAN_IOU_THR and best_t:
+                    cands[n] = best_t
+        chosen, rule, who = vote.decide(cands, lex)
+        if chosen is None:
+            # DISPUTED at line level. Emit the frame engine's version so the .md
+            # is not lossy, and let the unconfirmed index flag it. This matches
+            # the word-path convention where `vote.collapse` is applied.
+            chosen = vote.collapse(fb["t"])
+            rule = "DISPUTED"
+            who = frame_engine
+        # Suffix every rule with |NO_LAYER so a reviewer knows the row came from
+        # OCR only. `classify()` splits on "|" and reads the base, so bucket
+        # accounting is unaffected.
+        rule = rule + "|NO_LAYER"
+        rec = {"page": pi, "bbox": [round(x, 1) for x in fb_box], "col": 0,
+               "y": fb_box[1], "x": fb_box[0], "chosen": chosen,
+               "rule": rule, "who": who}
+        rec.update(cands)
+        rows.append(rec)
+        stats[rule] += 1
+    return rows, stats
 
 
 def build(pdf, engines=("rapidocr_multi", "rapidocr_en", "tesseract"),
@@ -146,6 +238,12 @@ def build(pdf, engines=("rapidocr_multi", "rapidocr_en", "tesseract"),
     ev, unconf, stats = [], [], collections.Counter()
     frames_used = {}
     pages_md = []
+    # 🔴 Number of pages that fell into the pure-scan emission path (see the
+    # comment at PURE_SCAN_IOU_THR near the top). Reported in the header so a
+    # downstream reader can tell WHY the .md's line granularity is coarser than
+    # the word-anchored path would have produced. On the corpus this bug was
+    # found on, this number equals doc.page_count for every failing document.
+    pure_scan_pages = 0
 
     for pi in range(doc.page_count):
         pg = doc[pi]
@@ -178,6 +276,26 @@ def build(pdf, engines=("rapidocr_multi", "rapidocr_en", "tesseract"),
                 unconf.append(rec)
                 stats["ONLY_ONE|NO_OCR"] += 1
             pages_md.append((pi, " ".join(w[4] for w in words)))
+            progress(pi + 1, doc.page_count, "voting")
+            continue
+
+        # 🔴 PURE-SCAN PATH. Before v0.2.2 the loop below dropped straight into
+        # `layout.assign(frame, words)`, which with `words == []` returns an
+        # empty owner mapping; every subsequent `for bi in order` iteration
+        # then read `owner.get(bi, []) == []` and emitted nothing. On a real
+        # scanned page (no text layer at all) this meant the OCR engines ran to
+        # completion and their output was thrown away. See the comment at the
+        # top of this file for the corpus this was found on.
+        if not words:
+            pure_scan_pages += 1
+            page_rows, page_stats = _emit_pure_scan_page(
+                pi, frame, frame_engine, ocr, granularity, lex)
+            for rec in page_rows:
+                if rec["rule"].startswith(("DISPUTED", "ONLY_ONE")) or rec["rule"].startswith("MEDOID_FLAG"):
+                    unconf.append(rec)
+            ev.extend(page_rows)
+            stats.update(page_stats)
+            pages_md.append((pi, "\n".join(r["chosen"] for r in page_rows if r["chosen"])))
             progress(pi + 1, doc.page_count, "voting")
             continue
 
@@ -360,6 +478,13 @@ def build(pdf, engines=("rapidocr_multi", "rapidocr_en", "tesseract"),
         "frame_engine": (max(sorted(frames_used.items()), key=lambda t: t[1])[0]
                          if frames_used else None),
         "frame_engine_pages": frames_used,
+        # New in v0.2.2. Non-zero means at least one page had no existing text
+        # layer at all, so on those pages voting was line-to-line rather than
+        # word-to-word. The count is reported here rather than merely tagged
+        # inside the rules because a reader who trusts the header should not
+        # have to grep evidence.json to find out how many pages fell into the
+        # coarser path -- the field naming that count is the honest place.
+        "pure_scan_pages": pure_scan_pages,
         "words": len(ev),
         # These four sum to `words`. The assert above enforces it, and they are
         # reported separately because they are NOT the same strength of evidence.
@@ -388,6 +513,13 @@ def build(pdf, engines=("rapidocr_multi", "rapidocr_en", "tesseract"),
     if len(used) < 3:
         warn = ("THIS RUN HAD ONLY %d ENGINES. Nothing here is confirmed by a quorum. "
                 "Treat the whole file as unverified. " % len(used)) + warn
+    if pure_scan_pages:
+        warn = ("NOTE: %d of %d pages had NO existing text layer. On those pages the "
+                "pipeline emitted LINE-level records from OCR only, without the PDF's "
+                "own words as anchors, so a rule such as SEP or NUM that separates "
+                "digits from punctuation is coarser than on a page with a text layer. "
+                "The tag `|NO_LAYER` on every affected row's rule flags this. "
+                % (pure_scan_pages, doc.page_count)) + warn
 
     md = ["---"]
     for k, v in hdr.items():

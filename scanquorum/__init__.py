@@ -3,7 +3,7 @@ engines agree, and show you the ones they do not.
 
 No language model is involved in transcription. See README.md.
 """
-__version__ = "0.2.1"
+__version__ = "0.2.2"
 
 # A Windows console defaults to a legacy code page (cp1251, cp866, cp1252...) and
 # raises UnicodeEncodeError the first time anything prints a character outside it.
