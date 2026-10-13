@@ -65,7 +65,7 @@ dependencies = [
 # Quote a figure from the README only from an environment installed this way.
 measured = [
     "pymupdf==1.28.2",
-    "rapidocr==3.9.2",
+    "rapidocr==3.10.0",
     "onnxruntime==1.28.0",
     "numpy==2.4.6",
     "pillow==12.3.0",
